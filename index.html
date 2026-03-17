@@ -37,6 +37,56 @@
   .btn-courses:hover { border-color:var(--gold-border); color:var(--gold); }
   .btn-comptage { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
   .btn-comptage:hover { border-color:rgba(74,222,128,0.5); color:var(--green); }
+  .btn-monnaie { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+  .btn-monnaie:hover { border-color:var(--gold-border); color:var(--gold); }
+
+  /* MONNAIE */
+  .monnaie-modal { max-width:420px; }
+  .monnaie-total { text-align:center; margin-bottom:20px; }
+  .monnaie-total-label { font-size:12px; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+  .monnaie-total-value { font-size:42px; font-weight:700; color:var(--gold); letter-spacing:-1px; }
+  .monnaie-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
+  .monnaie-piece { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 6px; display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; transition:all 0.1s; user-select:none; }
+  .monnaie-piece:hover { border-color:var(--gold-border); background:var(--gold-bg); }
+  .monnaie-piece:active { transform:scale(0.92); }
+  .monnaie-piece-icon { font-size:22px; line-height:1; }
+  .monnaie-piece-val { font-size:12px; font-weight:700; color:var(--text2); }
+  .monnaie-piece-count { font-size:20px; font-weight:700; color:var(--gold); min-height:26px; }
+  .monnaie-piece-sous { font-size:11px; color:var(--text3); }
+  .monnaie-piece-reset { font-size:10px; color:var(--text3); cursor:pointer; padding:2px 4px; border-radius:3px; }
+  .monnaie-piece-reset:hover { color:var(--red); }
+  .monnaie-sep { grid-column:1/-1; height:1px; background:var(--border); margin:2px 0; }
+  .monnaie-actions { display:flex; gap:8px; }
+  .monnaie-actions button { flex:1; padding:10px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border2); background:transparent; color:var(--text2); transition:background 0.15s; }
+  .monnaie-actions button:hover { background:var(--surface2); color:var(--text); }
+  .monnaie-tout-reset { font-size:12px; color:var(--text3); text-align:center; margin-bottom:12px; cursor:pointer; }
+  .monnaie-tout-reset:hover { color:var(--red); }
+  .monnaie-reset-all { font-size:12px; color:var(--text3); text-align:center; margin-bottom:14px; cursor:pointer; }
+  .monnaie-reset-all:hover { color:var(--red); }
+  .monnaie-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:8px; }
+  .btn-monnaie { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+  .btn-monnaie:hover { border-color:var(--gold-border); color:var(--gold); }
+
+  /* COMPTAGE MONNAIE */
+  .monnaie-modal { max-width:440px; }
+  .monnaie-total { text-align:center; margin-bottom:20px; }
+  .monnaie-total-label { font-size:12px; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .monnaie-total-value { font-size:48px; font-weight:700; color:var(--gold); letter-spacing:-1px; }
+  .monnaie-section-title { font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin:14px 0 8px; }
+  .monnaie-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:4px; }
+  .monnaie-piece { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 6px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; transition:all 0.1s; user-select:none; }
+  .monnaie-piece:hover { border-color:var(--gold-border); background:var(--gold-bg); }
+  .monnaie-piece:active { transform:scale(0.92); }
+  .monnaie-piece-val { font-size:13px; font-weight:700; color:var(--text); }
+  .monnaie-piece-count { font-size:20px; font-weight:700; color:var(--gold); line-height:1; }
+  .monnaie-piece-sub { font-size:10px; color:var(--text3); }
+  .monnaie-piece-reset { font-size:10px; color:var(--text3); cursor:pointer; margin-top:2px; }
+  .monnaie-piece-reset:hover { color:var(--red); }
+  .monnaie-actions { display:flex; gap:8px; margin-top:16px; }
+  .monnaie-actions button { flex:1; padding:10px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border2); background:transparent; color:var(--text2); transition:background 0.15s; }
+  .monnaie-actions button:hover { background:var(--surface2); color:var(--text); }
+  .monnaie-reset-all { font-size:12px; color:var(--text3); text-align:center; margin-bottom:10px; cursor:pointer; }
+  .monnaie-reset-all:hover { color:var(--red); }
 
   /* MODE COMPTAGE */
   .comptage-modal { max-width:480px; }
@@ -193,6 +243,7 @@
   </div>
   <div class="header-right">
     <div class="sync-dot loading" id="sync-dot"></div>
+    <button class="btn-monnaie" onclick="openMonnaie()">💶 Monnaie</button>
     <button class="btn-comptage" onclick="openComptage()">🔢 Comptage</button>
     <button class="btn-courses" onclick="openCourses()">🛒 Courses</button>
     <button class="btn-add" onclick="openAdd()">+ Ajouter</button>
@@ -238,6 +289,25 @@
       <button class="btn-save" onclick="saveItem()">Enregistrer</button>
     </div>
     <button class="btn-delete" id="btn-delete" onclick="deleteItem()" style="display:none">Supprimer ce produit</button>
+  </div>
+</div>
+
+<!-- Modal comptage monnaie -->
+<div class="overlay" id="overlay-monnaie">
+  <div class="modal monnaie-modal">
+    <h2>💶 Comptage de caisse</h2>
+    <div class="monnaie-total">
+      <div class="monnaie-total-label">Total</div>
+      <div class="monnaie-total-value" id="monnaie-total">0,00 €</div>
+    </div>
+    <div class="monnaie-reset-all" onclick="resetMonnaie()">↺ Tout remettre à zéro</div>
+    <div class="monnaie-section-title">Billets</div>
+    <div class="monnaie-grid" id="monnaie-billets"></div>
+    <div class="monnaie-section-title">Pièces</div>
+    <div class="monnaie-grid" id="monnaie-pieces"></div>
+    <div class="monnaie-actions">
+      <button onclick="closeMonnaie()">Fermer</button>
+    </div>
   </div>
 </div>
 
@@ -608,8 +678,59 @@ document.getElementById('overlay').addEventListener('click', e => { if (e.target
 document.getElementById('overlay-courses').addEventListener('click', e => { if (e.target === document.getElementById('overlay-courses')) closeCourses(); });
 document.getElementById('overlay-note').addEventListener('click', e => { if (e.target === document.getElementById('overlay-note')) closeNote(); });
 document.getElementById('overlay-comptage').addEventListener('click', e => { if (e.target === document.getElementById('overlay-comptage')) closeComptage(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); closeNote(); closeComptage(); } });
+document.getElementById('overlay-monnaie').addEventListener('click', e => { if (e.target === document.getElementById('overlay-monnaie')) closeMonnaie(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); closeNote(); closeComptage(); closeMonnaie(); } });
 document.getElementById('f-unit').addEventListener('change', syncUnitHint);
+
+// ── MONNAIE ───────────────────────────────────────────────────────
+const BILLETS = [50000, 20000, 10000, 5000, 2000, 1000, 500];
+const PIECES  = [200, 100, 50, 20, 10, 5, 2, 1];
+const BILLETS_EMOJI = {'50000':'💵','20000':'💵','10000':'💴','5000':'💶','2000':'💶','1000':'💶','500':'💷'};
+const PIECES_EMOJI  = {'200':'🟡','100':'🟡','50':'⚪','20':'⚪','10':'🔴','5':'🔴','2':'🟤','1':'🟤'};
+let monnaieCounts = {};
+
+function formatEuro(centimes) {
+  const e = Math.floor(centimes / 100);
+  const c = centimes % 100;
+  return e.toLocaleString('fr-FR') + ',' + String(c).padStart(2,'0') + ' €';
+}
+function labelPiece(val) {
+  if (val >= 100) return (val/100) % 1 === 0 ? (val/100)+' €' : (val/100)+' €';
+  return val+' c';
+}
+
+function renderMonnaie() {
+  let total = 0;
+  [...BILLETS, ...PIECES].forEach(v => { total += v * (monnaieCounts[v] || 0); });
+  document.getElementById('monnaie-total').textContent = formatEuro(total);
+
+  function makeGrid(vals, emojis, containerId) {
+    document.getElementById(containerId).innerHTML = vals.map(val => {
+      const count = monnaieCounts[val] || 0;
+      const sous  = count > 0 ? formatEuro(val * count) : '';
+      const em    = emojis[val] || '💰';
+      return `<div class="monnaie-piece" onclick="tapMonnaie(${val})">
+        <div class="monnaie-piece-icon">${em}</div>
+        <div class="monnaie-piece-val">${labelPiece(val)}</div>
+        <div class="monnaie-piece-count">${count > 0 ? count : ''}</div>
+        <div class="monnaie-piece-sous">${sous || '—'}</div>
+        ${count > 0 ? `<div class="monnaie-piece-reset" onclick="resetPiece(${val},event)">✕</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+  makeGrid(BILLETS, BILLETS_EMOJI, 'monnaie-billets');
+  makeGrid(PIECES,  PIECES_EMOJI,  'monnaie-pieces');
+}
+
+window.openMonnaie = () => {
+  monnaieCounts = {};
+  renderMonnaie();
+  document.getElementById('overlay-monnaie').classList.add('open');
+};
+window.closeMonnaie = () => { document.getElementById('overlay-monnaie').classList.remove('open'); };
+window.tapMonnaie = val => { monnaieCounts[val] = (monnaieCounts[val] || 0) + 1; renderMonnaie(); };
+window.resetPiece = (val, e) => { e.stopPropagation(); delete monnaieCounts[val]; renderMonnaie(); };
+window.resetMonnaie = () => { monnaieCounts = {}; renderMonnaie(); };
 
 // ── COMPTAGE ─────────────────────────────────────────────────────
 let comptageMap = {}; // id -> count
