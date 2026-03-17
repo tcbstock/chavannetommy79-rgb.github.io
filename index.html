@@ -35,6 +35,28 @@
   .btn-add:hover { opacity:0.85; }
   .btn-courses { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:6px; }
   .btn-courses:hover { border-color:var(--gold-border); color:var(--gold); }
+  .btn-comptage { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+  .btn-comptage:hover { border-color:rgba(74,222,128,0.5); color:var(--green); }
+
+  /* MODE COMPTAGE */
+  .comptage-modal { max-width:480px; }
+  .comptage-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin-bottom:16px; max-height:55vh; overflow-y:auto; padding-right:4px; }
+  .comptage-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 10px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; transition:all 0.1s; user-select:none; position:relative; }
+  .comptage-card:hover { border-color:var(--green); background:rgba(74,222,128,0.06); }
+  .comptage-card:active { transform:scale(0.94); }
+  .comptage-emoji { font-size:22px; line-height:1; }
+  .comptage-name  { font-size:11px; font-weight:600; color:var(--text); text-align:center; line-height:1.3; }
+  .comptage-count { font-size:28px; font-weight:700; color:var(--green); line-height:1; }
+  .comptage-unit  { font-size:10px; color:var(--text3); }
+  .comptage-reset { position:absolute; top:4px; right:4px; width:16px; height:16px; border-radius:3px; background:transparent; border:none; color:var(--text3); font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; }
+  .comptage-reset:hover { color:var(--red); }
+  .comptage-actions { display:flex; gap:8px; }
+  .comptage-actions button { flex:1; padding:10px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border2); background:transparent; color:var(--text2); transition:background 0.15s; }
+  .comptage-actions button:hover { background:var(--surface2); color:var(--text); }
+  .comptage-actions .btn-valider { background:var(--green); color:#111; border-color:transparent; font-weight:700; }
+  .comptage-actions .btn-valider:hover { opacity:0.85; }
+  .comptage-tout-reset { font-size:12px; color:var(--text3); text-align:center; margin-bottom:10px; cursor:pointer; }
+  .comptage-tout-reset:hover { color:var(--red); }
 
   .event-banner { margin:14px 20px 0; background:var(--gold-bg); border:1px solid var(--gold-border); border-radius:var(--radius-sm); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .event-banner-left { display:flex; align-items:center; gap:10px; }
@@ -171,6 +193,7 @@
   </div>
   <div class="header-right">
     <div class="sync-dot loading" id="sync-dot"></div>
+    <button class="btn-comptage" onclick="openComptage()">🔢 Comptage</button>
     <button class="btn-courses" onclick="openCourses()">🛒 Courses</button>
     <button class="btn-add" onclick="openAdd()">+ Ajouter</button>
   </div>
@@ -215,6 +238,20 @@
       <button class="btn-save" onclick="saveItem()">Enregistrer</button>
     </div>
     <button class="btn-delete" id="btn-delete" onclick="deleteItem()" style="display:none">Supprimer ce produit</button>
+  </div>
+</div>
+
+<!-- Modal comptage -->
+<div class="overlay" id="overlay-comptage">
+  <div class="modal comptage-modal">
+    <h2>🔢 Comptage rapide</h2>
+    <p style="font-size:12px;color:var(--text3);margin:-12px 0 14px">Appuie sur chaque produit autant de fois que tu en as. Puis valide.</p>
+    <div class="comptage-tout-reset" onclick="resetToutComptage()">↺ Tout remettre à zéro</div>
+    <div class="comptage-grid" id="comptage-grid"></div>
+    <div class="comptage-actions">
+      <button onclick="closeComptage()">Annuler</button>
+      <button class="btn-valider" onclick="validerComptage()">✓ Valider le stock</button>
+    </div>
   </div>
 </div>
 
@@ -570,8 +607,60 @@ window.deleteItem = () => {
 document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeModal(); });
 document.getElementById('overlay-courses').addEventListener('click', e => { if (e.target === document.getElementById('overlay-courses')) closeCourses(); });
 document.getElementById('overlay-note').addEventListener('click', e => { if (e.target === document.getElementById('overlay-note')) closeNote(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); closeNote(); } });
+document.getElementById('overlay-comptage').addEventListener('click', e => { if (e.target === document.getElementById('overlay-comptage')) closeComptage(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); closeNote(); closeComptage(); } });
 document.getElementById('f-unit').addEventListener('change', syncUnitHint);
+
+// ── COMPTAGE ─────────────────────────────────────────────────────
+let comptageMap = {}; // id -> count
+
+window.openComptage = () => {
+  comptageMap = {};
+  renderComptageGrid();
+  document.getElementById('overlay-comptage').classList.add('open');
+};
+window.closeComptage = () => { document.getElementById('overlay-comptage').classList.remove('open'); };
+
+function renderComptageGrid() {
+  const sorted = [...items].sort((a,b) => a.name.localeCompare(b.name));
+  document.getElementById('comptage-grid').innerHTML = sorted.map(item => {
+    const count = comptageMap[item.id] || 0;
+    const em = EMOJIS[item.cat] || '📦';
+    return `<div class="comptage-card" onclick="tapComptage(${item.id})">
+      <button class="comptage-reset" onclick="resetComptage(${item.id},event)" title="Remettre à 0">✕</button>
+      <span class="comptage-emoji">${em}</span>
+      <div class="comptage-name">${item.name}</div>
+      <div class="comptage-count">${count}</div>
+      <div class="comptage-unit">${item.unit || ''}${count > 1 && item.unit !== 'fût' ? 's' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+window.tapComptage = (id) => {
+  comptageMap[id] = (comptageMap[id] || 0) + 1;
+  renderComptageGrid();
+};
+window.resetComptage = (id, e) => {
+  e.stopPropagation();
+  comptageMap[id] = 0;
+  renderComptageGrid();
+};
+window.resetToutComptage = () => {
+  comptageMap = {};
+  renderComptageGrid();
+};
+window.validerComptage = () => {
+  const modifies = Object.keys(comptageMap).filter(id => comptageMap[id] > 0);
+  if (modifies.length === 0) { closeComptage(); return; }
+  if (!confirm(`Mettre à jour le stock de ${modifies.length} produit(s) avec les quantités comptées ?`)) return;
+  modifies.forEach(id => {
+    const item = items.find(i => i.id == id);
+    if (!item) return;
+    item.qty = comptageMap[id];
+    pushItem(item);
+  });
+  closeComptage();
+};
 
 let noteId = null;
 window.openNote = (id, e) => {
