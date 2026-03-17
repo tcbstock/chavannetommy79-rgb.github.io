@@ -95,6 +95,14 @@
   .qty-btn:hover { background:var(--blue-dim); border-color:var(--blue); color:var(--blue); }
   .card-add { border:1px dashed var(--border2); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; color:var(--text3); font-size:13px; padding:14px; min-height:160px; transition:background 0.15s,color 0.15s,border-color 0.15s; }
   .card-add:hover { background:var(--surface); color:var(--blue); border-color:var(--blue); }
+  .note-btn { position:absolute; bottom:10px; right:10px; width:24px; height:24px; border-radius:5px; border:1px solid var(--border2); background:var(--surface3); display:flex; align-items:center; justify-content:center; font-size:11px; cursor:pointer; transition:all 0.15s; z-index:2; line-height:1; opacity:0.4; }
+  .note-btn:hover { opacity:0.9; border-color:var(--amber); }
+  .note-btn.has-note { opacity:1; border-color:rgba(251,191,36,0.5); background:rgba(251,191,36,0.1); }
+  .card-note { margin-top:8px; font-size:11px; color:var(--amber); background:rgba(251,191,36,0.06); border-left:2px solid rgba(251,191,36,0.35); border-radius:0 4px 4px 0; padding:5px 8px; line-height:1.4; white-space:pre-wrap; word-break:break-word; }
+  .note-modal { max-width:340px; }
+  .note-modal textarea { width:100%; padding:10px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:var(--radius-sm); font-size:14px; color:var(--text); outline:none; resize:vertical; min-height:100px; font-family:inherit; line-height:1.5; transition:border-color 0.15s; }
+  .note-modal textarea:focus { border-color:var(--blue); }
+  .note-modal textarea::placeholder { color:var(--text3); }
 
   /* MODAL générique */
   .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
@@ -210,7 +218,21 @@
   </div>
 </div>
 
-<!-- Modal liste de courses -->
+<!-- Modal note -->
+<div class="overlay" id="overlay-note">
+  <div class="modal note-modal">
+    <h2 id="note-modal-title">📝 Note</h2>
+    <div class="form-row">
+      <label>Note rapide</label>
+      <textarea id="f-note" placeholder="Ex: Rupture fournisseur, commande en cours, changer de marque…"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeNote()">Annuler</button>
+      <button class="btn-save" onclick="saveNote()">Enregistrer</button>
+    </div>
+    <button class="btn-delete" id="btn-delete-note" onclick="deleteNote()" style="display:none">Supprimer la note</button>
+  </div>
+</div>
 <div class="overlay" id="overlay-courses">
   <div class="modal courses-modal">
     <h2>🛒 Liste de courses</h2>
@@ -354,7 +376,7 @@ window.openCourses = () => {
 };
 
 function courseItem(item, cls) {
-  const manque = Math.max(0, item.min - item.qty);
+  const manque = Math.max(item.min * 3 - item.qty, item.min);
   const u = item.unit || '';
   const pl = manque > 1 && u !== 'fût' ? 's' : '';
   return `<div class="courses-item">
@@ -363,7 +385,7 @@ function courseItem(item, cls) {
       <div class="courses-item-detail">Stock : ${item.qty} · Seuil : ${item.min}</div>
     </div>
     <div class="courses-item-right">
-      <div class="courses-item-qty ${cls}">${manque > 0 ? '+ ' + manque + ' ' + u + pl : 'À prévoir'}</div>
+      <div class="courses-item-qty ${cls}">+ ${manque} ${u}${pl}</div>
     </div>
   </div>`;
 }
@@ -383,17 +405,17 @@ window.copyCourses = () => {
   if (rupture.length > 0) {
     txt += `\n🔴 RUPTURE DE STOCK\n`;
     rupture.forEach(i => {
-      const manque = Math.max(0, i.min - i.qty);
+      const manque = Math.max(i.min * 3 - i.qty, i.min);
       const u = i.unit || '';
-      txt += `  • ${i.name} — commander ${manque} ${u}${manque > 1 && u !== 'fût' ? 's' : ''} (stock : ${i.qty})\n`;
+      txt += `  • ${i.name} — commander ${manque} ${u}${manque > 1 && u !== 'fût' ? 's' : ''} (stock actuel : ${i.qty})\n`;
     });
   }
   if (alerte.length > 0) {
     txt += `\n🟡 STOCK FAIBLE\n`;
     alerte.forEach(i => {
-      const manque = Math.max(0, i.min - i.qty);
+      const manque = Math.max(i.min * 3 - i.qty, i.min);
       const u = i.unit || '';
-      txt += `  • ${i.name} — commander ${manque} ${u}${manque > 1 && u !== 'fût' ? 's' : ''} (stock : ${i.qty})\n`;
+      txt += `  • ${i.name} — commander ${manque} ${u}${manque > 1 && u !== 'fût' ? 's' : ''} (stock actuel : ${i.qty})\n`;
     });
   }
   if (evenement.length > 0) {
@@ -458,6 +480,7 @@ function render() {
     const bl = s === 'low' ? 'Rupture' : s === 'warn' ? 'Alerte' : 'OK';
     return `<div class="card status-${s}${item.event ? ' event-flag' : ''}" onclick="openEdit(${item.id})">
       <button class="trophy-btn ${item.event ? 'active' : ''}" onclick="toggleEvent(${item.id},event)" title="Marquer pour événement">🏆</button>
+      <button class="note-btn ${item.note ? 'has-note' : ''}" onclick="openNote(${item.id},event)" title="${item.note ? 'Voir/modifier la note' : 'Ajouter une note'}">📝</button>
       <span class="card-emoji">${em}</span>
       <div class="badge ${s}">${bl}</div>${item.event ? '<span class="badge event">Évén.</span>' : ''}
       <div class="card-name" title="${item.name}">${item.name}</div>
@@ -470,6 +493,7 @@ function render() {
           <button class="qty-btn" onclick="change(${item.id},+1)">+</button>
         </div>
       </div>
+      ${item.note ? `<div class="card-note">${item.note}</div>` : ''}
     </div>`;
   }).join('') + `<div class="card-add" onclick="openAdd()">＋ Nouveau produit</div>`;
 }
@@ -545,8 +569,37 @@ window.deleteItem = () => {
 
 document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeModal(); });
 document.getElementById('overlay-courses').addEventListener('click', e => { if (e.target === document.getElementById('overlay-courses')) closeCourses(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); } });
+document.getElementById('overlay-note').addEventListener('click', e => { if (e.target === document.getElementById('overlay-note')) closeNote(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); closeNote(); } });
 document.getElementById('f-unit').addEventListener('change', syncUnitHint);
+
+let noteId = null;
+window.openNote = (id, e) => {
+  e.stopPropagation();
+  noteId = id;
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('note-modal-title').textContent = '📝 Note — ' + item.name;
+  document.getElementById('f-note').value = item.note || '';
+  document.getElementById('btn-delete-note').style.display = item.note ? 'block' : 'none';
+  document.getElementById('overlay-note').classList.add('open');
+  setTimeout(() => document.getElementById('f-note').focus(), 50);
+};
+window.closeNote = () => { document.getElementById('overlay-note').classList.remove('open'); noteId = null; };
+window.saveNote = () => {
+  const item = items.find(i => i.id === noteId);
+  if (!item) return;
+  item.note = document.getElementById('f-note').value.trim();
+  pushItem(item);
+  closeNote();
+};
+window.deleteNote = () => {
+  const item = items.find(i => i.id === noteId);
+  if (!item) return;
+  item.note = '';
+  pushItem(item);
+  closeNote();
+};
 </script>
 </body>
 </html>
