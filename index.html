@@ -7,152 +7,144 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg:       #111318;
-    --surface:  #1a1d24;
-    --surface2: #22262f;
-    --surface3: #2a2f3a;
-    --border:   rgba(255,255,255,0.08);
-    --border2:  rgba(255,255,255,0.16);
-    --text:     #e8eaf0;
-    --text2:    #8b909e;
-    --text3:    #55596a;
-    --blue:     #3b82f6;
-    --blue-dim: rgba(59,130,246,0.15);
-    --green:    #4ade80;
-    --green-bg: rgba(74,222,128,0.1);
-    --amber:    #fbbf24;
-    --amber-bg: rgba(251,191,36,0.1);
-    --red:      #f87171;
-    --red-bg:   rgba(248,113,113,0.1);
-    --gold:     #f59e0b;
-    --gold-bg:  rgba(245,158,11,0.12);
-    --gold-border: rgba(245,158,11,0.35);
-    --radius:   12px; --radius-sm: 8px;
+    --bg:#111318; --surface:#1a1d24; --surface2:#22262f; --surface3:#2a2f3a;
+    --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.16);
+    --text:#e8eaf0; --text2:#8b909e; --text3:#55596a;
+    --blue:#3b82f6; --blue-dim:rgba(59,130,246,0.15);
+    --green:#4ade80; --green-bg:rgba(74,222,128,0.1);
+    --amber:#fbbf24; --amber-bg:rgba(251,191,36,0.1);
+    --red:#f87171;   --red-bg:rgba(248,113,113,0.1);
+    --gold:#f59e0b;  --gold-bg:rgba(245,158,11,0.12); --gold-border:rgba(245,158,11,0.35);
+    --radius:12px; --radius-sm:8px;
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 0 0 60px; }
-
-  header { position: sticky; top: 0; z-index: 10; background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .logo { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; color: var(--text); }
-  .logo-badge { background: var(--blue); color: #fff; font-size: 12px; font-weight: 800; padding: 4px 9px; border-radius: 6px; letter-spacing: 1px; }
-  .logo span { font-size: 12px; font-weight: 400; color: var(--text3); }
-  .header-right { display: flex; align-items: center; gap: 10px; }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); flex-shrink: 0; transition: background 0.3s; }
-  .sync-dot.ok { background: var(--green); }
-  .sync-dot.loading { background: var(--amber); animation: pulse 1s infinite; }
-  .sync-dot.error { background: var(--red); }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:0 0 60px; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .btn-add { background: var(--blue); color: #fff; border: none; border-radius: var(--radius-sm); padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 0.3px; transition: opacity 0.15s; }
-  .btn-add:hover { opacity: 0.85; }
+  @keyframes spin   { to{transform:rotate(360deg)} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-  /* Bandeau événement */
-  .event-banner {
-    margin: 14px 20px 0;
-    background: var(--gold-bg);
-    border: 1px solid var(--gold-border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  }
-  .event-banner-left { display: flex; align-items: center; gap: 10px; }
-  .event-banner-icon { font-size: 18px; line-height: 1; }
-  .event-banner-text { font-size: 13px; color: var(--gold); font-weight: 600; }
-  .event-banner-sub  { font-size: 11px; color: var(--text3); margin-top: 1px; }
-  .event-banner-count { font-size: 22px; font-weight: 700; color: var(--gold); min-width: 24px; text-align: right; }
+  header { position:sticky; top:0; z-index:10; background:var(--surface); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .logo { display:flex; align-items:center; gap:10px; font-size:16px; font-weight:700; letter-spacing:0.5px; }
+  .logo-badge { background:var(--blue); color:#fff; font-size:12px; font-weight:800; padding:4px 9px; border-radius:6px; letter-spacing:1px; }
+  .logo span { font-size:12px; font-weight:400; color:var(--text3); }
+  .header-right { display:flex; align-items:center; gap:8px; }
+  .sync-dot { width:7px; height:7px; border-radius:50%; background:var(--text3); flex-shrink:0; transition:background 0.3s; }
+  .sync-dot.ok      { background:var(--green); }
+  .sync-dot.loading { background:var(--amber); animation:pulse 1s infinite; }
+  .sync-dot.error   { background:var(--red); }
+  .btn-add { background:var(--blue); color:#fff; border:none; border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; transition:opacity 0.15s; }
+  .btn-add:hover { opacity:0.85; }
+  .btn-courses { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:6px; }
+  .btn-courses:hover { border-color:var(--gold-border); color:var(--gold); }
 
-  .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px 20px 0; }
-  .stat { background: var(--surface); border-radius: var(--radius-sm); padding: 14px 16px; border: 1px solid var(--border); position: relative; overflow: hidden; }
-  .stat::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; border-radius: 3px 0 0 3px; }
-  .stat.s-total::before { background: var(--blue); }
-  .stat.s-red::before   { background: var(--red); }
-  .stat.s-amber::before { background: var(--amber); }
-  .stat.s-green::before { background: var(--green); }
-  .stat-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .stat-value { font-size: 26px; font-weight: 700; }
-  .stat.s-total .stat-value { color: var(--blue); }
-  .stat.s-red   .stat-value { color: var(--red); }
-  .stat.s-amber .stat-value { color: var(--amber); }
-  .stat.s-green .stat-value { color: var(--green); }
+  .event-banner { margin:14px 20px 0; background:var(--gold-bg); border:1px solid var(--gold-border); border-radius:var(--radius-sm); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .event-banner-left { display:flex; align-items:center; gap:10px; }
+  .event-banner-icon { font-size:18px; line-height:1; }
+  .event-banner-text { font-size:13px; color:var(--gold); font-weight:600; }
+  .event-banner-sub  { font-size:11px; color:var(--text3); margin-top:1px; }
+  .event-banner-count { font-size:22px; font-weight:700; color:var(--gold); }
 
-  .filters { display: flex; gap: 8px; padding: 14px 20px; overflow-x: auto; scrollbar-width: none; }
-  .filters::-webkit-scrollbar { display: none; }
-  .filter-btn { white-space: nowrap; font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; transition: all 0.15s; }
-  .filter-btn:hover { border-color: var(--border2); color: var(--text); }
-  .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); font-weight: 600; }
-  .filter-btn.active-event { background: var(--gold-bg); border-color: var(--gold-border); color: var(--gold); font-weight: 600; }
+  .stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:14px 20px 0; }
+  .stat { background:var(--surface); border-radius:var(--radius-sm); padding:14px 16px; border:1px solid var(--border); position:relative; overflow:hidden; }
+  .stat::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; border-radius:3px 0 0 3px; }
+  .stat.s-total::before { background:var(--blue); }
+  .stat.s-red::before   { background:var(--red); }
+  .stat.s-amber::before { background:var(--amber); }
+  .stat.s-green::before { background:var(--green); }
+  .stat-label { font-size:11px; color:var(--text3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .stat-value { font-size:26px; font-weight:700; }
+  .stat.s-total .stat-value { color:var(--blue); }
+  .stat.s-red   .stat-value { color:var(--red); }
+  .stat.s-amber .stat-value { color:var(--amber); }
+  .stat.s-green .stat-value { color:var(--green); }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(162px, 1fr)); gap: 10px; padding: 0 20px; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative; }
-  .card:hover { border-color: var(--border2); background: var(--surface2); }
-  .card.status-low  { border-top: 2px solid var(--red); }
-  .card.status-warn { border-top: 2px solid var(--amber); }
-  .card.status-ok   { border-top: 2px solid var(--blue); }
-  .card.event-flag  { border-color: var(--gold-border) !important; border-top: 2px solid var(--gold) !important; }
+  .filters { display:flex; gap:8px; padding:14px 20px; overflow-x:auto; scrollbar-width:none; }
+  .filters::-webkit-scrollbar { display:none; }
+  .filter-btn { white-space:nowrap; font-size:12px; font-weight:500; padding:6px 14px; border-radius:99px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all 0.15s; }
+  .filter-btn:hover { border-color:var(--border2); color:var(--text); }
+  .filter-btn.active { background:var(--blue-dim); border-color:var(--blue); color:var(--blue); font-weight:600; }
+  .filter-btn.active-event { background:var(--gold-bg); border-color:var(--gold-border); color:var(--gold); font-weight:600; }
 
-  /* Trophée toggle sur la carte */
-  .trophy-btn {
-    position: absolute; top: 10px; right: 10px;
-    width: 28px; height: 28px; border-radius: 6px;
-    border: 1px solid var(--border2);
-    background: var(--surface3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    z-index: 2; line-height: 1;
-    filter: grayscale(1) opacity(0.4);
-  }
-  .trophy-btn:hover { filter: grayscale(0) opacity(0.8); border-color: var(--gold-border); }
-  .trophy-btn.active {
-    background: var(--gold-bg); border-color: var(--gold-border);
-    filter: grayscale(0) opacity(1);
-  }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(162px,1fr)); gap:10px; padding:0 20px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; cursor:pointer; transition:border-color 0.15s,background 0.15s; position:relative; }
+  .card:hover { border-color:var(--border2); background:var(--surface2); }
+  .card.status-low  { border-top:2px solid var(--red); }
+  .card.status-warn { border-top:2px solid var(--amber); }
+  .card.status-ok   { border-top:2px solid var(--blue); }
+  .card.event-flag  { border-color:var(--gold-border) !important; border-top:2px solid var(--gold) !important; }
+  .trophy-btn { position:absolute; top:10px; right:10px; width:28px; height:28px; border-radius:6px; border:1px solid var(--border2); background:var(--surface3); display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:background 0.15s,border-color 0.15s; z-index:2; line-height:1; filter:grayscale(1) opacity(0.4); }
+  .trophy-btn:hover { filter:grayscale(0) opacity(0.8); border-color:var(--gold-border); }
+  .trophy-btn.active { background:var(--gold-bg); border-color:var(--gold-border); filter:grayscale(0) opacity(1); }
+  .card-emoji { font-size:26px; margin-bottom:8px; display:block; line-height:1; }
+  .card-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:24px; }
+  .card-cat  { font-size:11px; color:var(--text3); margin-bottom:10px; }
+  .badge { display:inline-block; font-size:10px; font-weight:700; padding:2px 7px; border-radius:99px; letter-spacing:0.4px; margin-bottom:8px; text-transform:uppercase; }
+  .badge.low   { background:var(--red-bg);   color:var(--red); }
+  .badge.warn  { background:var(--amber-bg); color:var(--amber); }
+  .badge.ok    { background:var(--blue-dim); color:var(--blue); }
+  .badge.event { background:var(--gold-bg);  color:var(--gold); margin-left:4px; }
+  .bar-track { height:4px; background:var(--surface3); border-radius:99px; overflow:hidden; margin-bottom:10px; }
+  .bar-fill { height:100%; border-radius:99px; transition:width 0.3s; }
+  .bar-fill.low  { background:var(--red); }
+  .bar-fill.warn { background:var(--amber); }
+  .bar-fill.ok   { background:var(--blue); }
+  .qty-row { display:flex; align-items:center; justify-content:space-between; }
+  .qty-info { font-size:11px; color:var(--text2); line-height:1.5; }
+  .qty-info strong { color:var(--text); font-size:13px; }
+  .qty-btns { display:flex; gap:4px; }
+  .qty-btn { width:28px; height:28px; border-radius:6px; border:1px solid var(--border2); background:var(--surface3); cursor:pointer; font-size:16px; font-weight:500; color:var(--text); display:flex; align-items:center; justify-content:center; line-height:1; transition:background 0.1s; }
+  .qty-btn:hover { background:var(--blue-dim); border-color:var(--blue); color:var(--blue); }
+  .card-add { border:1px dashed var(--border2); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; color:var(--text3); font-size:13px; padding:14px; min-height:160px; transition:background 0.15s,color 0.15s,border-color 0.15s; }
+  .card-add:hover { background:var(--surface); color:var(--blue); border-color:var(--blue); }
 
-  .card-emoji { font-size: 26px; margin-bottom: 8px; display: block; line-height: 1; }
-  .card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 24px; }
-  .card-cat { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
-  .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; letter-spacing: 0.4px; margin-bottom: 8px; text-transform: uppercase; }
-  .badge.low  { background: var(--red-bg);   color: var(--red); }
-  .badge.warn { background: var(--amber-bg); color: var(--amber); }
-  .badge.ok   { background: var(--blue-dim); color: var(--blue); }
-  .badge.event { background: var(--gold-bg); color: var(--gold); margin-left: 4px; }
-  .bar-track { height: 4px; background: var(--surface3); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
-  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.3s; }
-  .bar-fill.low  { background: var(--red); }
-  .bar-fill.warn { background: var(--amber); }
-  .bar-fill.ok   { background: var(--blue); }
-  .qty-row { display: flex; align-items: center; justify-content: space-between; }
-  .qty-info { font-size: 11px; color: var(--text2); line-height: 1.5; }
-  .qty-info strong { color: var(--text); font-size: 13px; }
-  .qty-btns { display: flex; gap: 4px; }
-  .qty-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border2); background: var(--surface3); cursor: pointer; font-size: 16px; font-weight: 500; color: var(--text); display: flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.1s; }
-  .qty-btn:hover { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
-  .card-add { border: 1px dashed var(--border2); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: var(--text3); font-size: 13px; padding: 14px; min-height: 160px; transition: background 0.15s, color 0.15s, border-color 0.15s; }
-  .card-add:hover { background: var(--surface); color: var(--blue); border-color: var(--blue); }
+  /* MODAL générique */
+  .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+  .overlay.open { display:flex; }
+  .modal { background:var(--surface); border-radius:var(--radius); padding:24px; width:100%; max-width:380px; border:1px solid var(--border2); max-height:90vh; overflow-y:auto; animation:fadeIn 0.18s ease; }
+  .modal h2 { font-size:17px; font-weight:700; margin-bottom:20px; color:var(--text); }
+  .form-row { margin-bottom:14px; }
+  .form-row label { display:block; font-size:11px; font-weight:600; color:var(--text3); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.5px; }
+  .form-row input, .form-row select { width:100%; padding:9px 12px; background:var(--surface2); border:1px solid var(--border2); border-radius:var(--radius-sm); font-size:14px; color:var(--text); outline:none; transition:border-color 0.15s; }
+  .form-row input:focus, .form-row select:focus { border-color:var(--blue); }
+  .form-row select option { background:var(--surface2); }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .hint { font-size:11px; color:var(--text3); margin-top:4px; }
+  .modal-actions { display:flex; gap:8px; margin-top:20px; }
+  .modal-actions button { flex:1; padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border2); font-size:14px; font-weight:500; cursor:pointer; background:transparent; color:var(--text); transition:background 0.15s; }
+  .modal-actions button:hover { background:var(--surface2); }
+  .modal-actions .btn-save { background:var(--blue); color:#fff; border-color:transparent; }
+  .modal-actions .btn-save:hover { opacity:0.85; }
+  .btn-delete { width:100%; margin-top:10px; padding:9px; border-radius:var(--radius-sm); border:1px solid rgba(248,113,113,0.2); background:transparent; color:var(--red); font-size:13px; cursor:pointer; transition:background 0.15s; }
+  .btn-delete:hover { background:var(--red-bg); }
 
-  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
-  .overlay.open { display: flex; }
-  .modal { background: var(--surface); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 380px; border: 1px solid var(--border2); max-height: 90vh; overflow-y: auto; }
-  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
-  .form-row { margin-bottom: 14px; }
-  .form-row label { display: block; font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-row input, .form-row select { width: 100%; padding: 9px 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); font-size: 14px; color: var(--text); outline: none; transition: border-color 0.15s; }
-  .form-row input:focus, .form-row select:focus { border-color: var(--blue); }
-  .form-row select option { background: var(--surface2); }
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .hint { font-size: 11px; color: var(--text3); margin-top: 4px; }
-  .modal-actions { display: flex; gap: 8px; margin-top: 20px; }
-  .modal-actions button { flex: 1; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border2); font-size: 14px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text); transition: background 0.15s; }
-  .modal-actions button:hover { background: var(--surface2); }
-  .modal-actions .btn-save { background: var(--blue); color: #fff; border-color: transparent; }
-  .modal-actions .btn-save:hover { opacity: 0.85; }
-  .btn-delete { width: 100%; margin-top: 10px; padding: 9px; border-radius: var(--radius-sm); border: 1px solid rgba(248,113,113,0.2); background: transparent; color: var(--red); font-size: 13px; cursor: pointer; transition: background 0.15s; }
-  .btn-delete:hover { background: var(--red-bg); }
-  .loading-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 200; }
-  .loading-screen p { font-size: 14px; color: var(--text2); }
-  .spinner { width: 32px; height: 32px; border: 2px solid var(--border2); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @media (max-width: 480px) {
-    .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  /* MODAL LISTE DE COURSES */
+  .courses-modal { max-width:440px; }
+  .courses-section { margin-bottom:20px; }
+  .courses-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+  .courses-section-title.c-red   { color:var(--red); }
+  .courses-section-title.c-amber { color:var(--amber); }
+  .courses-section-title.c-gold  { color:var(--gold); }
+  .courses-item { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-radius:var(--radius-sm); background:var(--surface2); margin-bottom:6px; gap:8px; }
+  .courses-item-name { font-size:13px; font-weight:500; color:var(--text); }
+  .courses-item-detail { font-size:11px; color:var(--text3); margin-top:1px; }
+  .courses-item-right { text-align:right; flex-shrink:0; }
+  .courses-item-qty { font-size:13px; font-weight:600; }
+  .courses-item-qty.c-red   { color:var(--red); }
+  .courses-item-qty.c-amber { color:var(--amber); }
+  .courses-item-qty.c-gold  { color:var(--gold); }
+  .courses-empty { font-size:13px; color:var(--text3); text-align:center; padding:24px 0; }
+  .courses-actions { display:flex; gap:8px; margin-top:4px; }
+  .courses-actions button { flex:1; padding:10px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; border:1px solid var(--border2); background:transparent; color:var(--text2); }
+  .courses-actions button:hover { background:var(--surface2); color:var(--text); }
+  .courses-actions .btn-copy { background:var(--blue); color:#fff; border-color:transparent; }
+  .courses-actions .btn-copy:hover { opacity:0.85; }
+  .copy-confirm { font-size:12px; color:var(--green); text-align:center; margin-top:8px; height:18px; transition:opacity 0.3s; }
+
+  .loading-screen { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; z-index:200; }
+  .loading-screen p { font-size:14px; color:var(--text2); }
+  .spinner { width:32px; height:32px; border:2px solid var(--border2); border-top-color:var(--blue); border-radius:50%; animation:spin 0.7s linear infinite; }
+  @media (max-width:480px) {
+    .stats-bar { grid-template-columns:repeat(2,1fr); }
+    .grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
   }
 </style>
 </head>
@@ -170,7 +162,8 @@
     <span id="date-label"></span>
   </div>
   <div class="header-right">
-    <div class="sync-dot loading" id="sync-dot" title="Synchronisation Firebase"></div>
+    <div class="sync-dot loading" id="sync-dot"></div>
+    <button class="btn-courses" onclick="openCourses()">🛒 Courses</button>
     <button class="btn-add" onclick="openAdd()">+ Ajouter</button>
   </div>
 </header>
@@ -180,15 +173,12 @@
 <div class="filters" id="filters"></div>
 <div class="grid" id="grid"></div>
 
+<!-- Modal produit -->
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2 id="modal-title">Nouveau produit</h2>
-    <div class="form-row">
-      <label>Nom du produit</label>
-      <input type="text" id="f-name" placeholder="Ex: Coca Original" />
-    </div>
-    <div class="form-row">
-      <label>Catégorie</label>
+    <div class="form-row"><label>Nom du produit</label><input type="text" id="f-name" placeholder="Ex: Coca Original" /></div>
+    <div class="form-row"><label>Catégorie</label>
       <select id="f-cat">
         <option value="🥤 Soft">🥤 Soft</option>
         <option value="🍺 Bière">🍺 Bière</option>
@@ -198,8 +188,7 @@
         <option value="🍽️ Food">🍽️ Food</option>
       </select>
     </div>
-    <div class="form-row">
-      <label>Unité</label>
+    <div class="form-row"><label>Unité</label>
       <select id="f-unit">
         <option value="canette">Canette</option>
         <option value="bouteille">Bouteille</option>
@@ -210,24 +199,27 @@
       </select>
     </div>
     <div class="two-col">
-      <div class="form-row">
-        <label>Quantité actuelle</label>
-        <input type="number" id="f-qty" min="0" value="0" />
-        <div class="hint" id="f-unit-hint">En canettes</div>
-      </div>
-      <div class="form-row">
-        <label>Seuil d'alerte</label>
-        <input type="number" id="f-min" min="0" value="6" />
-        <div class="hint">En dessous = alerte</div>
-      </div>
+      <div class="form-row"><label>Quantité actuelle</label><input type="number" id="f-qty" min="0" value="0" /><div class="hint" id="f-unit-hint">En canettes</div></div>
+      <div class="form-row"><label>Seuil d'alerte</label><input type="number" id="f-min" min="0" value="6" /><div class="hint">En dessous = alerte</div></div>
     </div>
     <div class="modal-actions">
       <button onclick="closeModal()">Annuler</button>
       <button class="btn-save" onclick="saveItem()">Enregistrer</button>
     </div>
-    <button class="btn-delete" id="btn-delete" onclick="deleteItem()" style="display:none">
-      Supprimer ce produit
-    </button>
+    <button class="btn-delete" id="btn-delete" onclick="deleteItem()" style="display:none">Supprimer ce produit</button>
+  </div>
+</div>
+
+<!-- Modal liste de courses -->
+<div class="overlay" id="overlay-courses">
+  <div class="modal courses-modal">
+    <h2>🛒 Liste de courses</h2>
+    <div id="courses-content"></div>
+    <div class="copy-confirm" id="copy-confirm"></div>
+    <div class="courses-actions">
+      <button onclick="closeCourses()">Fermer</button>
+      <button class="btn-copy" onclick="copyCourses()">📋 Copier la liste</button>
+    </div>
   </div>
 </div>
 
@@ -235,12 +227,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
-  databaseURL: "https://bar-tennis-stock-default-rtdb.europe-west1.firebasedatabase.app"
-};
-
-const app   = initializeApp(firebaseConfig);
-const db    = getDatabase(app);
+const firebaseConfig = { databaseURL: "https://bar-tennis-stock-default-rtdb.europe-west1.firebasedatabase.app" };
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
 const dbRef = ref(db, 'stock');
 
 const EMOJIS    = {"🥤 Soft":"🥤","🍺 Bière":"🍺","🍷 Vin":"🍷","🍫 Snack sucré":"🍫","🥨 Snack salé":"🥨","🍽️ Food":"🍽️"};
@@ -304,13 +293,11 @@ function pushAll() {
 }
 function pushItem(item) {
   setSyncState('loading');
-  set(ref(db, 'stock/item_' + item.id), item)
-    .then(() => setSyncState('ok')).catch(() => setSyncState('error'));
+  set(ref(db, 'stock/item_' + item.id), item).then(() => setSyncState('ok')).catch(() => setSyncState('error'));
 }
 function removeItem(id) {
   setSyncState('loading');
-  remove(ref(db, 'stock/item_' + id))
-    .then(() => setSyncState('ok')).catch(() => setSyncState('error'));
+  remove(ref(db, 'stock/item_' + id)).then(() => setSyncState('ok')).catch(() => setSyncState('error'));
 }
 
 function getStatus(i) {
@@ -330,31 +317,120 @@ window.toggleEvent = (id, e) => {
   pushItem(item);
 };
 
+// ── LISTE DE COURSES ──────────────────────────────────────────────
+window.openCourses = () => {
+  const rupture  = items.filter(i => getStatus(i) === 'low');
+  const alerte   = items.filter(i => getStatus(i) === 'warn');
+  const evenement = items.filter(i => i.event && getStatus(i) === 'ok');
+
+  let html = '';
+
+  if (rupture.length === 0 && alerte.length === 0 && evenement.length === 0) {
+    html = `<div class="courses-empty">✅ Tout est bien approvisionné !<br>Aucun produit à commander.</div>`;
+  } else {
+    if (rupture.length > 0) {
+      html += `<div class="courses-section">
+        <div class="courses-section-title c-red">🔴 Rupture de stock (${rupture.length})</div>
+        ${rupture.map(i => courseItem(i, 'c-red')).join('')}
+      </div>`;
+    }
+    if (alerte.length > 0) {
+      html += `<div class="courses-section">
+        <div class="courses-section-title c-amber">🟡 Stock faible (${alerte.length})</div>
+        ${alerte.map(i => courseItem(i, 'c-amber')).join('')}
+      </div>`;
+    }
+    if (evenement.length > 0) {
+      html += `<div class="courses-section">
+        <div class="courses-section-title c-gold">🏆 Événement à venir (${evenement.length})</div>
+        ${evenement.map(i => courseItem(i, 'c-gold')).join('')}
+      </div>`;
+    }
+  }
+
+  document.getElementById('courses-content').innerHTML = html;
+  document.getElementById('copy-confirm').textContent = '';
+  document.getElementById('overlay-courses').classList.add('open');
+};
+
+function courseItem(item, cls) {
+  const manque = Math.max(0, item.min - item.qty);
+  const u = item.unit || '';
+  const pl = manque > 1 && u !== 'fût' ? 's' : '';
+  return `<div class="courses-item">
+    <div>
+      <div class="courses-item-name">${EMOJIS[item.cat] || '📦'} ${item.name}</div>
+      <div class="courses-item-detail">Stock : ${item.qty} · Seuil : ${item.min}</div>
+    </div>
+    <div class="courses-item-right">
+      <div class="courses-item-qty ${cls}">${manque > 0 ? '+ ' + manque + ' ' + u + pl : 'À prévoir'}</div>
+    </div>
+  </div>`;
+}
+
+window.closeCourses = () => {
+  document.getElementById('overlay-courses').classList.remove('open');
+};
+
+window.copyCourses = () => {
+  const rupture   = items.filter(i => getStatus(i) === 'low');
+  const alerte    = items.filter(i => getStatus(i) === 'warn');
+  const evenement = items.filter(i => i.event && getStatus(i) === 'ok');
+  const date = new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+
+  let txt = `🛒 LISTE DE COURSES BAR TCB\n${date}\n`;
+
+  if (rupture.length > 0) {
+    txt += `\n🔴 RUPTURE DE STOCK\n`;
+    rupture.forEach(i => {
+      const manque = Math.max(0, i.min - i.qty);
+      const u = i.unit || '';
+      txt += `  • ${i.name} — commander ${manque} ${u}${manque > 1 && u !== 'fût' ? 's' : ''} (stock : ${i.qty})\n`;
+    });
+  }
+  if (alerte.length > 0) {
+    txt += `\n🟡 STOCK FAIBLE\n`;
+    alerte.forEach(i => {
+      const manque = Math.max(0, i.min - i.qty);
+      const u = i.unit || '';
+      txt += `  • ${i.name} — commander ${manque} ${u}${manque > 1 && u !== 'fût' ? 's' : ''} (stock : ${i.qty})\n`;
+    });
+  }
+  if (evenement.length > 0) {
+    txt += `\n🏆 ÉVÉNEMENT À VENIR\n`;
+    evenement.forEach(i => { txt += `  • ${i.name} — à commander en quantité supplémentaire\n`; });
+  }
+
+  if (rupture.length === 0 && alerte.length === 0 && evenement.length === 0) {
+    txt += '\n✅ Rien à commander, tout est approvisionné !';
+  }
+
+  navigator.clipboard.writeText(txt).then(() => {
+    const el = document.getElementById('copy-confirm');
+    el.textContent = '✓ Liste copiée dans le presse-papier !';
+    el.style.opacity = '1';
+    setTimeout(() => { el.style.opacity = '0'; }, 2500);
+  });
+};
+// ─────────────────────────────────────────────────────────────────
+
 function render() {
   document.getElementById('date-label').textContent =
     new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long'});
 
-  const low      = items.filter(i => getStatus(i) === 'low').length;
-  const warn     = items.filter(i => getStatus(i) === 'warn').length;
-  const ok       = items.filter(i => getStatus(i) === 'ok').length;
+  const low  = items.filter(i => getStatus(i) === 'low').length;
+  const warn = items.filter(i => getStatus(i) === 'warn').length;
+  const ok   = items.filter(i => getStatus(i) === 'ok').length;
   const eventCount = items.filter(i => i.event).length;
 
-  // Bandeau événement
   const banner = document.getElementById('event-banner');
-  if (eventCount > 0) {
-    banner.innerHTML = `<div class="event-banner">
-      <div class="event-banner-left">
-        <span class="event-banner-icon">🏆</span>
-        <div>
-          <div class="event-banner-text">Événement à venir</div>
-          <div class="event-banner-sub">Produits à commander en priorité</div>
-        </div>
-      </div>
-      <div class="event-banner-count">${eventCount}</div>
-    </div>`;
-  } else {
-    banner.innerHTML = '';
-  }
+  banner.innerHTML = eventCount > 0 ? `<div class="event-banner">
+    <div class="event-banner-left">
+      <span class="event-banner-icon">🏆</span>
+      <div><div class="event-banner-text">Événement à venir</div><div class="event-banner-sub">Produits à commander en priorité</div></div>
+    </div>
+    <div class="event-banner-count">${eventCount}</div>
+  </div>` : '';
 
   document.getElementById('stats').innerHTML = `
     <div class="stat s-total"><div class="stat-label">Produits</div><div class="stat-value">${items.length}</div></div>
@@ -363,37 +439,27 @@ function render() {
     <div class="stat s-green"><div class="stat-label">OK</div>      <div class="stat-value">${ok}</div></div>`;
 
   const usedCats = ["Tout", ...CAT_ORDER.filter(c => items.some(i => i.cat === c))];
-  const eventFilterActive = filter === '__event__';
+  const isEvent  = filter === '__event__';
   document.getElementById('filters').innerHTML =
-    usedCats.map(c =>
-      `<button class="filter-btn ${!eventFilterActive && filter===c ? 'active' : ''}" onclick="setFilter(${JSON.stringify(c)})">${c}</button>`
-    ).join('') +
-    (eventCount > 0
-      ? `<button class="filter-btn ${eventFilterActive ? 'active-event' : ''}" onclick="setFilter('__event__')">🏆 Événement (${eventCount})</button>`
-      : '');
+    usedCats.map(c => `<button class="filter-btn ${!isEvent && filter===c ? 'active' : ''}" onclick="setFilter(${JSON.stringify(c)})">${c}</button>`).join('') +
+    (eventCount > 0 ? `<button class="filter-btn ${isEvent ? 'active-event' : ''}" onclick="setFilter('__event__')">🏆 Événement (${eventCount})</button>` : '');
 
-  let shown = filter === '__event__'
-    ? items.filter(i => i.event)
-    : filter === "Tout" ? items : items.filter(i => i.cat === filter);
-
+  let shown = isEvent ? items.filter(i => i.event) : filter === "Tout" ? items : items.filter(i => i.cat === filter);
   const sorted = [...shown].sort((a, b) => {
-    // Les produits événement remontent en premier
     if (a.event && !b.event) return -1;
     if (!a.event && b.event) return 1;
     return ({low:0,warn:1,ok:2})[getStatus(a)] - ({low:0,warn:1,ok:2})[getStatus(b)];
   });
 
   document.getElementById('grid').innerHTML = sorted.map(item => {
-    const s   = getStatus(item);
-    const pct = getBarPct(item);
-    const em  = EMOJIS[item.cat] || '📦';
-    const u   = item.unit || '';
-    const pl  = item.qty > 1 && u !== 'fût' ? 's' : '';
-    const bl  = s === 'low' ? 'Rupture' : s === 'warn' ? 'Alerte' : 'OK';
+    const s = getStatus(item), pct = getBarPct(item);
+    const em = EMOJIS[item.cat] || '📦', u = item.unit || '';
+    const pl = item.qty > 1 && u !== 'fût' ? 's' : '';
+    const bl = s === 'low' ? 'Rupture' : s === 'warn' ? 'Alerte' : 'OK';
     return `<div class="card status-${s}${item.event ? ' event-flag' : ''}" onclick="openEdit(${item.id})">
-      <button class="trophy-btn ${item.event ? 'active' : ''}" onclick="toggleEvent(${item.id}, event)" title="Marquer pour événement">🏆</button>
+      <button class="trophy-btn ${item.event ? 'active' : ''}" onclick="toggleEvent(${item.id},event)" title="Marquer pour événement">🏆</button>
       <span class="card-emoji">${em}</span>
-      <div class="badge ${s}">${bl}</div>${item.event ? '<span class="badge event">Événement</span>' : ''}
+      <div class="badge ${s}">${bl}</div>${item.event ? '<span class="badge event">Évén.</span>' : ''}
       <div class="card-name" title="${item.name}">${item.name}</div>
       <div class="card-cat">${item.cat.replace(/[\u{1F300}-\u{1FFFF}]/gu,'').trim()}</div>
       <div class="bar-track"><div class="bar-fill ${s}" style="width:${pct}%"></div></div>
@@ -423,11 +489,11 @@ function syncUnitHint() {
 window.openAdd = () => {
   editId = null;
   document.getElementById('modal-title').textContent = 'Nouveau produit';
-  document.getElementById('f-name').value  = '';
-  document.getElementById('f-cat').value   = '🥤 Soft';
-  document.getElementById('f-unit').value  = 'canette';
-  document.getElementById('f-qty').value   = '0';
-  document.getElementById('f-min').value   = '6';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-cat').value  = '🥤 Soft';
+  document.getElementById('f-unit').value = 'canette';
+  document.getElementById('f-qty').value  = '0';
+  document.getElementById('f-min').value  = '6';
   document.getElementById('btn-delete').style.display = 'none';
   syncUnitHint();
   document.getElementById('overlay').classList.add('open');
@@ -439,11 +505,11 @@ window.openEdit = id => {
   const item = items.find(i => i.id === id);
   if (!item) return;
   document.getElementById('modal-title').textContent = 'Modifier · ' + item.name;
-  document.getElementById('f-name').value  = item.name;
-  document.getElementById('f-cat').value   = item.cat;
-  document.getElementById('f-unit').value  = item.unit || 'bouteille';
-  document.getElementById('f-qty').value   = item.qty;
-  document.getElementById('f-min').value   = item.min;
+  document.getElementById('f-name').value = item.name;
+  document.getElementById('f-cat').value  = item.cat;
+  document.getElementById('f-unit').value = item.unit || 'bouteille';
+  document.getElementById('f-qty').value  = item.qty;
+  document.getElementById('f-min').value  = item.min;
   document.getElementById('btn-delete').style.display = 'block';
   syncUnitHint();
   document.getElementById('overlay').classList.add('open');
@@ -459,9 +525,8 @@ window.saveItem = () => {
   const qty  = Math.max(0, parseInt(document.getElementById('f-qty').value) || 0);
   const min  = Math.max(0, parseInt(document.getElementById('f-min').value) || 0);
   if (editId) {
-    const item = items.find(i => i.id === editId);
-    Object.assign(item, {name, cat, unit, qty, min});
-    pushItem(item);
+    Object.assign(items.find(i => i.id === editId), {name, cat, unit, qty, min});
+    pushItem(items.find(i => i.id === editId));
   } else {
     const newItem = {id: Date.now(), name, cat, unit, qty, min, event: false};
     items.push(newItem);
@@ -478,10 +543,9 @@ window.deleteItem = () => {
   closeModal();
 };
 
-document.getElementById('overlay').addEventListener('click', e => {
-  if (e.target === document.getElementById('overlay')) closeModal();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.getElementById('overlay').addEventListener('click', e => { if (e.target === document.getElementById('overlay')) closeModal(); });
+document.getElementById('overlay-courses').addEventListener('click', e => { if (e.target === document.getElementById('overlay-courses')) closeCourses(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); } });
 document.getElementById('f-unit').addEventListener('change', syncUnitHint);
 </script>
 </body>
