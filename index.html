@@ -64,6 +64,16 @@
   .monnaie-reset-all { font-size:12px; color:var(--text3); text-align:center; margin-bottom:14px; cursor:pointer; }
   .monnaie-reset-all:hover { color:var(--red); }
   .monnaie-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:8px; }
+  .recette-zone { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; margin-top:16px; }
+  .recette-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .recette-field { flex:1; min-width:80px; display:flex; flex-direction:column; gap:4px; }
+  .recette-field label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:0.4px; }
+  .recette-field input { width:100%; padding:7px 10px; background:var(--surface3); border:1px solid var(--border2); border-radius:6px; font-size:14px; color:var(--text); outline:none; }
+  .recette-field input:focus { border-color:var(--blue); }
+  .recette-val { font-size:16px; font-weight:700; color:var(--text2); padding:7px 0; }
+  .recette-val.accent { color:var(--green); font-size:18px; }
+  .recette-val.negative { color:var(--red); }
+  .recette-op { font-size:20px; font-weight:700; color:var(--text3); flex-shrink:0; padding-top:18px; }
   .btn-monnaie { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
   .btn-monnaie:hover { border-color:var(--gold-border); color:var(--gold); }
 
@@ -297,7 +307,7 @@
   <div class="modal monnaie-modal">
     <h2>💶 Comptage de caisse</h2>
     <div class="monnaie-total">
-      <div class="monnaie-total-label">Total</div>
+      <div class="monnaie-total-label">Total caisse</div>
       <div class="monnaie-total-value" id="monnaie-total">0,00 €</div>
     </div>
     <div class="monnaie-reset-all" onclick="resetMonnaie()">↺ Tout remettre à zéro</div>
@@ -305,6 +315,28 @@
     <div class="monnaie-grid" id="monnaie-billets"></div>
     <div class="monnaie-section-title">Pièces</div>
     <div class="monnaie-grid" id="monnaie-pieces"></div>
+
+    <!-- Zone calcul recette -->
+    <div class="recette-zone">
+      <div class="monnaie-section-title" style="margin-top:4px">Calcul de recette</div>
+      <div class="recette-row">
+        <div class="recette-field">
+          <label>Total caisse</label>
+          <div class="recette-val" id="recette-caisse">0,00 €</div>
+        </div>
+        <div class="recette-op">−</div>
+        <div class="recette-field">
+          <label>Fonds de caisse</label>
+          <input type="number" id="recette-fonds" min="0" step="0.01" placeholder="0,00" oninput="calcRecette()" />
+        </div>
+        <div class="recette-op">=</div>
+        <div class="recette-field">
+          <label>Recette nette</label>
+          <div class="recette-val accent" id="recette-nette">—</div>
+        </div>
+      </div>
+    </div>
+
     <div class="monnaie-actions">
       <button onclick="closeMonnaie()">Fermer</button>
     </div>
@@ -724,13 +756,30 @@ function renderMonnaie() {
 
 window.openMonnaie = () => {
   monnaieCounts = {};
+  document.getElementById('recette-fonds').value = '';
   renderMonnaie();
   document.getElementById('overlay-monnaie').classList.add('open');
 };
 window.closeMonnaie = () => { document.getElementById('overlay-monnaie').classList.remove('open'); };
-window.tapMonnaie = val => { monnaieCounts[val] = (monnaieCounts[val] || 0) + 1; renderMonnaie(); };
-window.resetPiece = (val, e) => { e.stopPropagation(); delete monnaieCounts[val]; renderMonnaie(); };
-window.resetMonnaie = () => { monnaieCounts = {}; renderMonnaie(); };
+window.tapMonnaie = val => { monnaieCounts[val] = (monnaieCounts[val] || 0) + 1; renderMonnaie(); calcRecette(); };
+window.resetPiece = (val, e) => { e.stopPropagation(); delete monnaieCounts[val]; renderMonnaie(); calcRecette(); };
+window.resetMonnaie = () => { monnaieCounts = {}; renderMonnaie(); calcRecette(); };
+
+window.calcRecette = () => {
+  let total = 0;
+  [...BILLETS, ...PIECES].forEach(v => { total += v * (monnaieCounts[v] || 0); });
+  const fonds = Math.round((parseFloat(document.getElementById('recette-fonds').value) || 0) * 100);
+  const recette = total - fonds;
+  document.getElementById('recette-caisse').textContent = formatEuro(total);
+  const el = document.getElementById('recette-nette');
+  if (fonds === 0) {
+    el.textContent = '—';
+    el.className = 'recette-val accent';
+  } else {
+    el.textContent = (recette >= 0 ? '' : '−') + formatEuro(Math.abs(recette));
+    el.className = 'recette-val ' + (recette >= 0 ? 'accent' : 'negative');
+  }
+};
 
 // ── COMPTAGE ─────────────────────────────────────────────────────
 let comptageMap = {}; // id -> count
