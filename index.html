@@ -3,94 +3,236 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎾 Bar Tennis Club — Stock</title>
+<title>TCB — Gestion du stock bar</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f9f8f6; --surface: #ffffff; --surface2: #f1f0ec;
-    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
-    --text: #1a1a18; --text2: #6b6b66; --text3: #9a9a94;
-    --green: #3B6D11; --green-bg: #EAF3DE;
-    --amber: #854F0B; --amber-bg: #FAEEDA;
-    --red: #A32D2D;   --red-bg: #FCEBEB;
-    --radius: 12px; --radius-sm: 8px;
+    --bg:       #111318;
+    --surface:  #1a1d24;
+    --surface2: #22262f;
+    --surface3: #2a2f3a;
+    --border:   rgba(255,255,255,0.08);
+    --border2:  rgba(255,255,255,0.16);
+    --text:     #e8eaf0;
+    --text2:    #8b909e;
+    --text3:    #55596a;
+    --blue:     #3b82f6;
+    --blue-dim: rgba(59,130,246,0.15);
+    --blue-glow:rgba(59,130,246,0.25);
+    --green:    #4ade80;
+    --green-bg: rgba(74,222,128,0.1);
+    --amber:    #fbbf24;
+    --amber-bg: rgba(251,191,36,0.1);
+    --red:      #f87171;
+    --red-bg:   rgba(248,113,113,0.1);
+    --radius:   12px;
+    --radius-sm:8px;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1a; --surface: #242422; --surface2: #2e2e2b;
-      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.18);
-      --text: #e8e8e2; --text2: #9a9a94; --text3: #6b6b66;
-      --green: #97C459; --green-bg: #1a2e08;
-      --amber: #EF9F27; --amber-bg: #2a1e08;
-      --red: #F09595;   --red-bg: #2a0f0f;
-    }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 0 0 60px; }
-  header { position: sticky; top: 0; z-index: 10; background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .logo { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; white-space: nowrap; }
-  .logo span { font-size: 13px; font-weight: 400; color: var(--text2); margin-left: 6px; }
-  .header-right { display: flex; align-items: center; gap: 8px; }
-  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text3); flex-shrink: 0; transition: background 0.3s; }
-  .sync-dot.ok { background: var(--green); }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 16px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--text);
+  }
+  .logo-badge {
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px; font-weight: 800;
+    padding: 4px 9px; border-radius: 6px;
+    letter-spacing: 1px;
+  }
+  .logo span { font-size: 12px; font-weight: 400; color: var(--text3); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); flex-shrink: 0; transition: background 0.3s; }
+  .sync-dot.ok      { background: var(--green); }
   .sync-dot.loading { background: var(--amber); animation: pulse 1s infinite; }
-  .sync-dot.error { background: var(--red); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .btn-add { background: var(--text); color: var(--surface); border: none; border-radius: var(--radius-sm); padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .sync-dot.error   { background: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes spin   { to { transform: rotate(360deg); } }
+  .btn-add {
+    background: var(--blue); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 13px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.3px;
+    transition: opacity 0.15s;
+  }
   .btn-add:hover { opacity: 0.85; }
-  .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 16px 20px 0; }
-  .stat { background: var(--surface); border-radius: var(--radius-sm); padding: 12px 14px; border: 1px solid var(--border); }
-  .stat-label { font-size: 11px; color: var(--text2); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
-  .stat-value { font-size: 24px; font-weight: 600; }
-  .stat-value.c-red { color: var(--red); } .stat-value.c-amber { color: var(--amber); } .stat-value.c-green { color: var(--green); }
-  .filters { display: flex; gap: 8px; padding: 14px 20px; overflow-x: auto; scrollbar-width: none; }
+
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; padding: 16px 20px 0;
+  }
+  .stat {
+    background: var(--surface); border-radius: var(--radius-sm);
+    padding: 14px 16px; border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .stat::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--stat-color, var(--text3));
+    border-radius: 3px 0 0 3px;
+  }
+  .stat.s-total::before  { background: var(--blue); }
+  .stat.s-red::before    { background: var(--red); }
+  .stat.s-amber::before  { background: var(--amber); }
+  .stat.s-green::before  { background: var(--green); }
+  .stat-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 26px; font-weight: 700; }
+  .stat.s-total .stat-value  { color: var(--blue); }
+  .stat.s-red   .stat-value  { color: var(--red); }
+  .stat.s-amber .stat-value  { color: var(--amber); }
+  .stat.s-green .stat-value  { color: var(--green); }
+
+  .filters {
+    display: flex; gap: 8px; padding: 14px 20px;
+    overflow-x: auto; scrollbar-width: none;
+  }
   .filters::-webkit-scrollbar { display: none; }
-  .filter-btn { white-space: nowrap; font-size: 13px; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; transition: all 0.15s; }
+  .filter-btn {
+    white-space: nowrap; font-size: 12px; font-weight: 500;
+    padding: 6px 14px; border-radius: 99px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text2); cursor: pointer; transition: all 0.15s;
+    letter-spacing: 0.2px;
+  }
   .filter-btn:hover { border-color: var(--border2); color: var(--text); }
-  .filter-btn.active { background: var(--text); color: var(--surface); border-color: transparent; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 0 20px; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: border-color 0.15s; }
-  .card:hover { border-color: var(--border2); }
-  .card.status-low  { border-left: 3px solid var(--red); }
-  .card.status-warn { border-left: 3px solid var(--amber); }
-  .card.status-ok   { border-left: 3px solid var(--green); }
+  .filter-btn.active {
+    background: var(--blue-dim); border-color: var(--blue);
+    color: var(--blue); font-weight: 600;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(162px, 1fr));
+    gap: 10px; padding: 0 20px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .card:hover { border-color: var(--border2); background: var(--surface2); }
+  .card.status-low  { border-top: 2px solid var(--red);   }
+  .card.status-warn { border-top: 2px solid var(--amber); }
+  .card.status-ok   { border-top: 2px solid var(--blue);  }
   .card-emoji { font-size: 26px; margin-bottom: 8px; display: block; line-height: 1; }
-  .card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-name {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    margin-bottom: 2px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
   .card-cat { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
-  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 99px; letter-spacing: 0.3px; margin-bottom: 8px; }
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 99px; letter-spacing: 0.4px;
+    margin-bottom: 8px; text-transform: uppercase;
+  }
   .badge.low  { background: var(--red-bg);   color: var(--red); }
   .badge.warn { background: var(--amber-bg); color: var(--amber); }
-  .badge.ok   { background: var(--green-bg); color: var(--green); }
-  .bar-track { height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
+  .badge.ok   { background: var(--blue-dim); color: var(--blue); }
+  .bar-track {
+    height: 4px; background: var(--surface3);
+    border-radius: 99px; overflow: hidden; margin-bottom: 10px;
+  }
   .bar-fill { height: 100%; border-radius: 99px; transition: width 0.3s; }
-  .bar-fill.low  { background: var(--red); } .bar-fill.warn { background: var(--amber); } .bar-fill.ok { background: var(--green); }
+  .bar-fill.low  { background: var(--red); }
+  .bar-fill.warn { background: var(--amber); }
+  .bar-fill.ok   { background: var(--blue); }
   .qty-row { display: flex; align-items: center; justify-content: space-between; }
   .qty-info { font-size: 11px; color: var(--text2); line-height: 1.5; }
+  .qty-info strong { color: var(--text); font-size: 13px; }
   .qty-btns { display: flex; gap: 4px; }
-  .qty-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 16px; font-weight: 500; color: var(--text); display: flex; align-items: center; justify-content: center; line-height: 1; transition: background 0.1s; }
-  .qty-btn:hover { background: var(--surface2); }
-  .card-add { border: 1.5px dashed var(--border); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: var(--text3); font-size: 13px; padding: 14px; min-height: 160px; transition: background 0.15s, color 0.15s; }
-  .card-add:hover { background: var(--surface); color: var(--text2); }
-  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .qty-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border2); background: var(--surface3);
+    cursor: pointer; font-size: 16px; font-weight: 500;
+    color: var(--text); display: flex; align-items: center;
+    justify-content: center; line-height: 1; transition: background 0.1s;
+  }
+  .qty-btn:hover { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+  .card-add {
+    border: 1px dashed var(--border2); border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; cursor: pointer; color: var(--text3);
+    font-size: 13px; padding: 14px; min-height: 160px;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .card-add:hover { background: var(--surface); color: var(--blue); border-color: var(--blue); }
+
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 100;
+    align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(4px);
+  }
   .overlay.open { display: flex; }
-  .modal { background: var(--surface); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 380px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
-  .modal h2 { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .modal {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 24px; width: 100%; max-width: 380px;
+    border: 1px solid var(--border2);
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
   .form-row { margin-bottom: 14px; }
-  .form-row label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
-  .form-row input, .form-row select { width: 100%; padding: 9px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; color: var(--text); outline: none; transition: border-color 0.15s; }
-  .form-row input:focus, .form-row select:focus { border-color: var(--border2); }
+  .form-row label {
+    display: block; font-size: 11px; font-weight: 600;
+    color: var(--text3); margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .form-row input, .form-row select {
+    width: 100%; padding: 9px 12px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); font-size: 14px;
+    color: var(--text); outline: none; transition: border-color 0.15s;
+  }
+  .form-row input:focus, .form-row select:focus { border-color: var(--blue); }
+  .form-row select option { background: var(--surface2); }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .hint { font-size: 11px; color: var(--text3); margin-top: 4px; }
   .modal-actions { display: flex; gap: 8px; margin-top: 20px; }
-  .modal-actions button { flex: 1; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text); transition: background 0.15s; }
+  .modal-actions button {
+    flex: 1; padding: 10px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border2); font-size: 14px;
+    font-weight: 500; cursor: pointer; background: transparent;
+    color: var(--text); transition: background 0.15s;
+  }
   .modal-actions button:hover { background: var(--surface2); }
-  .modal-actions .btn-save { background: var(--text); color: var(--surface); border-color: transparent; }
+  .modal-actions .btn-save {
+    background: var(--blue); color: #fff; border-color: transparent;
+  }
   .modal-actions .btn-save:hover { opacity: 0.85; }
-  .btn-delete { width: 100%; margin-top: 10px; padding: 9px; border-radius: var(--radius-sm); border: 1px solid var(--red-bg); background: transparent; color: var(--red); font-size: 13px; cursor: pointer; transition: background 0.15s; }
+  .btn-delete {
+    width: 100%; margin-top: 10px; padding: 9px;
+    border-radius: var(--radius-sm); border: 1px solid rgba(248,113,113,0.2);
+    background: transparent; color: var(--red);
+    font-size: 13px; cursor: pointer; transition: background 0.15s;
+  }
   .btn-delete:hover { background: var(--red-bg); }
-  .loading-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 200; }
+  .loading-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px; z-index: 200;
+  }
   .loading-screen p { font-size: 14px; color: var(--text2); }
-  .spinner { width: 32px; height: 32px; border: 2px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--blue);
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
   @media (max-width: 480px) {
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
     .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
@@ -105,9 +247,13 @@
 </div>
 
 <header>
-  <div class="logo">🎾 Bar Tennis <span id="date-label"></span></div>
+  <div class="logo">
+    <span class="logo-badge">TCB</span>
+    Bar Stock
+    <span id="date-label"></span>
+  </div>
   <div class="header-right">
-    <div class="sync-dot loading" id="sync-dot" title="Synchronisation"></div>
+    <div class="sync-dot loading" id="sync-dot" title="Synchronisation Firebase"></div>
     <button class="btn-add" onclick="openAdd()">+ Ajouter</button>
   </div>
 </header>
@@ -218,7 +364,6 @@ const DEFAULT_ITEMS = [
 ];
 
 let items = [], filter = "Tout", editId = null, firstLoad = true;
-
 const syncDot = document.getElementById('sync-dot');
 const loading = document.getElementById('loading');
 
@@ -239,13 +384,11 @@ function pushAll() {
   items.forEach(i => { obj['item_' + i.id] = i; });
   set(dbRef, obj).then(() => setSyncState('ok')).catch(() => setSyncState('error'));
 }
-
 function pushItem(item) {
   setSyncState('loading');
   set(ref(db, 'stock/item_' + item.id), item)
     .then(() => setSyncState('ok')).catch(() => setSyncState('error'));
 }
-
 function removeItem(id) {
   setSyncState('loading');
   remove(ref(db, 'stock/item_' + id))
@@ -257,7 +400,6 @@ function getStatus(i) {
   if (i.qty <= i.min) return 'warn';
   return 'ok';
 }
-
 function getBarPct(i) {
   return Math.min(100, Math.round((i.qty / Math.max(i.min * 2, i.qty, 1)) * 100));
 }
@@ -271,10 +413,10 @@ function render() {
   const ok   = items.filter(i => getStatus(i) === 'ok').length;
 
   document.getElementById('stats').innerHTML = `
-    <div class="stat"><div class="stat-label">Produits</div><div class="stat-value">${items.length}</div></div>
-    <div class="stat"><div class="stat-label">Rupture</div><div class="stat-value c-red">${low}</div></div>
-    <div class="stat"><div class="stat-label">Alerte</div><div class="stat-value c-amber">${warn}</div></div>
-    <div class="stat"><div class="stat-label">OK</div><div class="stat-value c-green">${ok}</div></div>`;
+    <div class="stat s-total"><div class="stat-label">Produits</div><div class="stat-value">${items.length}</div></div>
+    <div class="stat s-red">  <div class="stat-label">Rupture</div> <div class="stat-value">${low}</div></div>
+    <div class="stat s-amber"><div class="stat-label">Alerte</div>  <div class="stat-value">${warn}</div></div>
+    <div class="stat s-green"><div class="stat-label">OK</div>      <div class="stat-value">${ok}</div></div>`;
 
   const usedCats = ["Tout", ...CAT_ORDER.filter(c => items.some(i => i.cat === c))];
   document.getElementById('filters').innerHTML = usedCats.map(c =>
@@ -285,7 +427,7 @@ function render() {
   const sorted = [...shown].sort((a,b) => ({low:0,warn:1,ok:2})[getStatus(a)] - ({low:0,warn:1,ok:2})[getStatus(b)]);
 
   document.getElementById('grid').innerHTML = sorted.map(item => {
-    const s  = getStatus(item);
+    const s   = getStatus(item);
     const pct = getBarPct(item);
     const em  = EMOJIS[item.cat] || '📦';
     const u   = item.unit || '';
@@ -309,7 +451,6 @@ function render() {
 }
 
 window.setFilter = c => { filter = c; render(); };
-
 window.change = (id, delta) => {
   const item = items.find(i => i.id === id);
   if (!item) return;
