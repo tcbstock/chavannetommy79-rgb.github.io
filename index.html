@@ -39,8 +39,35 @@
   .btn-comptage:hover { border-color:rgba(74,222,128,0.5); color:var(--green); }
   .btn-monnaie { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
   .btn-monnaie:hover { border-color:var(--gold-border); color:var(--gold); }
+  .btn-vente { background:rgba(74,222,128,0.12); color:var(--green); border:1px solid rgba(74,222,128,0.35); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+  .btn-vente:hover { background:rgba(74,222,128,0.22); }
 
-  /* MONNAIE */
+  /* MODE VENTE */
+  .vente-overlay { display:none; position:fixed; inset:0; background:var(--bg); z-index:50; flex-direction:column; overflow:hidden; }
+  .vente-overlay.open { display:flex; }
+  .vente-header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-shrink:0; }
+  .vente-title { font-size:15px; font-weight:700; color:var(--green); }
+  .vente-subtitle { font-size:11px; color:var(--text3); margin-top:1px; }
+  .vente-filters { display:flex; gap:8px; padding:12px 20px 0; overflow-x:auto; scrollbar-width:none; flex-shrink:0; }
+  .vente-filters::-webkit-scrollbar { display:none; }
+  .vente-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; padding:12px 20px 80px; overflow-y:auto; flex:1; }
+  .vente-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 10px 12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; text-align:center; gap:5px; transition:all 0.1s; user-select:none; position:relative; }
+  .vente-card:hover  { border-color:rgba(74,222,128,0.4); background:rgba(74,222,128,0.05); }
+  .vente-card:active { transform:scale(0.92); background:rgba(74,222,128,0.12); }
+  .vente-card.rupture { opacity:0.35; pointer-events:none; }
+  .vente-card-emoji { font-size:30px; line-height:1; }
+  .vente-card-name  { font-size:12px; font-weight:600; color:var(--text); line-height:1.3; }
+  .vente-card-qty   { font-size:24px; font-weight:700; color:var(--text); line-height:1; }
+  .vente-card-unit  { font-size:10px; color:var(--text3); }
+  .vente-card-badge { position:absolute; top:5px; right:5px; font-size:9px; font-weight:700; padding:2px 5px; border-radius:99px; }
+  .vente-card-badge.warn { background:var(--amber-bg); color:var(--amber); }
+  .vente-card-badge.low  { background:var(--red-bg);   color:var(--red); }
+  .vente-flash { position:absolute; inset:0; border-radius:var(--radius); background:rgba(74,222,128,0.22); opacity:0; pointer-events:none; border:2px solid rgba(74,222,128,0.6); transition:opacity 0.08s; }
+  .vente-flash.show { opacity:1; }
+  .vente-bar { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; z-index:51; }
+  .vente-bar-info { font-size:13px; color:var(--text2); }
+  .vente-bar-info strong { color:var(--green); font-size:16px; }
+  .btn-fermer-vente { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 16px; font-size:13px; font-weight:500; cursor:pointer; }
   .monnaie-modal { max-width:420px; }
   .monnaie-total { text-align:center; margin-bottom:20px; }
   .monnaie-total-label { font-size:12px; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
@@ -117,6 +144,33 @@
   .comptage-actions .btn-valider:hover { opacity:0.85; }
   .comptage-tout-reset { font-size:12px; color:var(--text3); text-align:center; margin-bottom:10px; cursor:pointer; }
   .comptage-tout-reset:hover { color:var(--red); }
+
+  /* MODE VENTE */
+  .vente-modal { max-width:480px; }
+  .vente-banner { background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.25); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .vente-banner-left { font-size:13px; color:var(--red); font-weight:600; }
+  .vente-banner-sub  { font-size:11px; color:var(--text3); margin-top:1px; }
+  .vente-vendus { font-size:22px; font-weight:700; color:var(--red); }
+  .vente-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin-bottom:16px; max-height:55vh; overflow-y:auto; padding-right:4px; }
+  .vente-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 10px; display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; transition:all 0.1s; user-select:none; position:relative; }
+  .vente-card:hover { border-color:rgba(248,113,113,0.5); background:rgba(248,113,113,0.05); }
+  .vente-card:active { transform:scale(0.94); }
+  .vente-card.rupture { opacity:0.4; pointer-events:none; }
+  .vente-emoji { font-size:22px; line-height:1; }
+  .vente-name  { font-size:11px; font-weight:600; color:var(--text); text-align:center; line-height:1.3; }
+  .vente-stock { font-size:20px; font-weight:700; color:var(--text); line-height:1; }
+  .vente-stock.low  { color:var(--red); }
+  .vente-stock.warn { color:var(--amber); }
+  .vente-stock.ok   { color:var(--green); }
+  .vente-vendu { font-size:11px; color:var(--red); font-weight:600; min-height:16px; }
+  .vente-unit  { font-size:10px; color:var(--text3); }
+  .vente-undo  { position:absolute; top:4px; right:4px; width:18px; height:18px; border-radius:3px; background:transparent; border:none; color:var(--text3); font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; }
+  .vente-undo:hover { color:var(--amber); }
+  .vente-actions { display:flex; gap:8px; }
+  .vente-actions button { flex:1; padding:10px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border2); background:transparent; color:var(--text2); transition:background 0.15s; }
+  .vente-actions button:hover { background:var(--surface2); color:var(--text); }
+  .vente-actions .btn-valider-vente { background:var(--red); color:#fff; border-color:transparent; font-weight:700; }
+  .vente-actions .btn-valider-vente:hover { opacity:0.85; }
 
   .event-banner { margin:14px 20px 0; background:var(--gold-bg); border:1px solid var(--gold-border); border-radius:var(--radius-sm); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .event-banner-left { display:flex; align-items:center; gap:10px; }
@@ -253,7 +307,8 @@
   </div>
   <div class="header-right">
     <div class="sync-dot loading" id="sync-dot"></div>
-    <button class="btn-monnaie" onclick="openMonnaie()">💶 Monnaie</button>
+    <button class="btn-vente" onclick="openVente()">🛍️ Vente</button>
+    <button class="btn-monnaie" onclick="openMonnaie()">💶 Caisse</button>
     <button class="btn-comptage" onclick="openComptage()">🔢 Comptage</button>
     <button class="btn-courses" onclick="openCourses()">🛒 Courses</button>
     <button class="btn-add" onclick="openAdd()">+ Ajouter</button>
@@ -343,6 +398,25 @@
   </div>
 </div>
 
+<!-- Modal vente -->
+<div class="overlay" id="overlay-vente">
+  <div class="modal vente-modal">
+    <h2>🛍️ Mode vente</h2>
+    <div class="vente-banner">
+      <div>
+        <div class="vente-banner-left">Appuie sur chaque produit vendu</div>
+        <div class="vente-banner-sub">Le stock se met à jour à la validation</div>
+      </div>
+      <div class="vente-vendus" id="vente-vendus-count">0</div>
+    </div>
+    <div class="vente-grid" id="vente-grid"></div>
+    <div class="vente-actions">
+      <button onclick="closeVente()">Annuler</button>
+      <button class="btn-valider-vente" onclick="validerVente()">✓ Valider les ventes</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal comptage -->
 <div class="overlay" id="overlay-comptage">
   <div class="modal comptage-modal">
@@ -381,6 +455,23 @@
       <button onclick="closeCourses()">Fermer</button>
       <button class="btn-copy" onclick="copyCourses()">📋 Copier la liste</button>
     </div>
+  </div>
+</div>
+
+<!-- Mode vente plein écran -->
+<div class="vente-overlay" id="vente-overlay">
+  <div class="vente-header">
+    <div>
+      <div class="vente-title">🛍️ Mode vente</div>
+      <div class="vente-subtitle">Tape sur un produit pour enlever 1 du stock</div>
+    </div>
+    <button class="btn-fermer-vente" onclick="closeVente()">✕ Fermer</button>
+  </div>
+  <div class="vente-filters" id="vente-filters"></div>
+  <div class="vente-grid" id="vente-grid"></div>
+  <div class="vente-bar">
+    <div class="vente-bar-info">Ventes session : <strong id="vente-count">0</strong></div>
+    <button class="btn-fermer-vente" onclick="closeVente()">✕ Fermer le mode vente</button>
   </div>
 </div>
 
@@ -711,8 +802,70 @@ document.getElementById('overlay-courses').addEventListener('click', e => { if (
 document.getElementById('overlay-note').addEventListener('click', e => { if (e.target === document.getElementById('overlay-note')) closeNote(); });
 document.getElementById('overlay-comptage').addEventListener('click', e => { if (e.target === document.getElementById('overlay-comptage')) closeComptage(); });
 document.getElementById('overlay-monnaie').addEventListener('click', e => { if (e.target === document.getElementById('overlay-monnaie')) closeMonnaie(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); closeNote(); closeComptage(); closeMonnaie(); } });
+document.getElementById('overlay-vente').addEventListener('click', e => { if (e.target === document.getElementById('overlay-vente')) closeVente(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCourses(); closeNote(); closeComptage(); closeMonnaie(); closeVente(); } });
 document.getElementById('f-unit').addEventListener('change', syncUnitHint);
+
+// ── MODE VENTE ────────────────────────────────────────────────────
+let venteMap = {}; // id -> nb vendus
+
+function renderVenteGrid() {
+  const totalVendus = Object.values(venteMap).reduce((a,b) => a+b, 0);
+  document.getElementById('vente-vendus-count').textContent = totalVendus;
+
+  const sorted = [...items].sort((a,b) => a.name.localeCompare(b.name));
+  document.getElementById('vente-grid').innerHTML = sorted.map(item => {
+    const vendu = venteMap[item.id] || 0;
+    const stockRestant = item.qty - vendu;
+    const s = stockRestant <= 0 ? 'low' : stockRestant <= item.min ? 'warn' : 'ok';
+    const em = EMOJIS[item.cat] || '📦';
+    const rupture = item.qty <= 0;
+    return `<div class="vente-card${rupture ? ' rupture' : ''}" onclick="tapVente(${item.id})">
+      ${vendu > 0 ? `<button class="vente-undo" onclick="undoVente(${item.id},event)" title="Annuler 1">↩</button>` : ''}
+      <span class="vente-emoji">${em}</span>
+      <div class="vente-name">${item.name}</div>
+      <div class="vente-stock ${s}">${stockRestant}</div>
+      <div class="vente-unit">${item.unit || ''}</div>
+      ${vendu > 0 ? `<div class="vente-vendu">− ${vendu} vendu${vendu > 1 ? 's' : ''}</div>` : '<div class="vente-vendu"></div>'}
+    </div>`;
+  }).join('');
+}
+
+window.openVente = () => {
+  venteMap = {};
+  renderVenteGrid();
+  document.getElementById('overlay-vente').classList.add('open');
+};
+window.closeVente = () => { document.getElementById('overlay-vente').classList.remove('open'); };
+
+window.tapVente = (id) => {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  const vendu = venteMap[id] || 0;
+  if (item.qty - vendu <= 0) return; // plus de stock
+  venteMap[id] = vendu + 1;
+  renderVenteGrid();
+};
+
+window.undoVente = (id, e) => {
+  e.stopPropagation();
+  if (!venteMap[id]) return;
+  venteMap[id] = Math.max(0, venteMap[id] - 1);
+  if (venteMap[id] === 0) delete venteMap[id];
+  renderVenteGrid();
+};
+
+window.validerVente = () => {
+  const vendus = Object.keys(venteMap).filter(id => venteMap[id] > 0);
+  if (vendus.length === 0) { closeVente(); return; }
+  vendus.forEach(id => {
+    const item = items.find(i => i.id == id);
+    if (!item) return;
+    item.qty = Math.max(0, item.qty - venteMap[id]);
+    pushItem(item);
+  });
+  closeVente();
+};
 
 // ── MONNAIE ───────────────────────────────────────────────────────
 const BILLETS = [50000, 20000, 10000, 5000, 2000, 1000, 500];
@@ -859,6 +1012,81 @@ window.deleteNote = () => {
   pushItem(item);
   closeNote();
 };
+
+// ── MODE VENTE ────────────────────────────────────────────────────
+let venteFilter = 'Tout';
+let venteSessionCount = 0;
+
+window.openVente = () => {
+  venteSessionCount = 0;
+  venteFilter = 'Tout';
+  document.getElementById('vente-count').textContent = '0';
+  renderVente();
+  document.getElementById('vente-overlay').classList.add('open');
+};
+window.closeVente = () => { document.getElementById('vente-overlay').classList.remove('open'); };
+window.setVenteFilter = c => { venteFilter = c; renderVente(); };
+
+window.vendreProduit = (id) => {
+  const item = items.find(i => i.id === id);
+  if (!item || item.qty <= 0) return;
+  item.qty = Math.max(0, item.qty - 1);
+  pushItem(item);
+  venteSessionCount++;
+  document.getElementById('vente-count').textContent = venteSessionCount;
+  // Flash visuel
+  const card = document.getElementById('vente-card-' + id);
+  if (card) {
+    const flash = card.querySelector('.vente-flash');
+    if (flash) {
+      flash.classList.add('show');
+      setTimeout(() => flash.classList.remove('show'), 150);
+    }
+    card.querySelector('.vente-card-qty').textContent = item.qty;
+    if (item.qty === 0) card.classList.add('rupture');
+    const badge = card.querySelector('.vente-card-badge');
+    if (badge) {
+      if (item.qty === 0) { badge.textContent = 'Rupture'; badge.className = 'vente-card-badge low'; }
+      else if (item.qty <= item.min) { badge.textContent = 'Faible'; badge.className = 'vente-card-badge warn'; }
+      else { badge.remove(); }
+    } else if (item.qty <= item.min && item.qty > 0) {
+      const b = document.createElement('div');
+      b.className = 'vente-card-badge warn';
+      b.textContent = 'Faible';
+      card.appendChild(b);
+    }
+  }
+};
+
+function renderVente() {
+  const usedCats = ['Tout', ...CAT_ORDER.filter(c => items.some(i => i.cat === c))];
+  document.getElementById('vente-filters').innerHTML = usedCats.map(c =>
+    `<button class="filter-btn ${venteFilter === c ? 'active' : ''}" onclick="setVenteFilter(${JSON.stringify(c)})">${c}</button>`
+  ).join('');
+
+  const shown  = venteFilter === 'Tout' ? items : items.filter(i => i.cat === venteFilter);
+  const sorted = [...shown].sort((a, b) => {
+    if (a.qty === 0 && b.qty > 0) return 1;
+    if (b.qty === 0 && a.qty > 0) return -1;
+    return a.name.localeCompare(b.name);
+  });
+
+  document.getElementById('vente-grid').innerHTML = sorted.map(item => {
+    const em  = EMOJIS[item.cat] || '📦';
+    const u   = item.unit || '';
+    const low = item.qty === 0;
+    const warn = item.qty > 0 && item.qty <= item.min;
+    return `<div class="vente-card ${low ? 'rupture' : ''}" id="vente-card-${item.id}" onclick="vendreProduit(${item.id})">
+      <div class="vente-flash"></div>
+      ${warn ? `<div class="vente-card-badge warn">Faible</div>` : ''}
+      ${low  ? `<div class="vente-card-badge low">Rupture</div>` : ''}
+      <div class="vente-card-emoji">${em}</div>
+      <div class="vente-card-name">${item.name}</div>
+      <div class="vente-card-qty">${item.qty}</div>
+      <div class="vente-card-unit">${u}</div>
+    </div>`;
+  }).join('');
+}
 </script>
 </body>
 </html>
