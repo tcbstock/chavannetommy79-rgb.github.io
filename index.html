@@ -784,9 +784,19 @@ function render() {
 
   const usedCats = ["Tout", ...CAT_ORDER.filter(c => items.some(i => i.cat === c))];
   const isEvent  = filter === '__event__';
-  document.getElementById('filters').innerHTML =
-    usedCats.map(c => `<button class="filter-btn ${!isEvent && filter===c ? 'active' : ''}" onclick="setFilter(${JSON.stringify(c)})">${c}</button>`).join('') +
-    (eventCount > 0 ? `<button class="filter-btn ${isEvent ? 'active-event' : ''}" onclick="setFilter('__event__')">🏆 Événement (${eventCount})</button>` : '');
+  const allFilters = [...usedCats, ...(eventCount > 0 ? ['__event__'] : [])];
+
+  document.getElementById('filters').innerHTML = usedCats.map((c, idx) =>
+    `<button class="filter-btn ${!isEvent && filter===c ? 'active' : ''}" data-idx="${idx}">${c}</button>`
+  ).join('') + (eventCount > 0 ?
+    `<button class="filter-btn ${isEvent ? 'active-event' : ''}" data-idx="${usedCats.length}">🏆 Événement (${eventCount})</button>` : '');
+
+  document.querySelectorAll('#filters .filter-btn').forEach((btn, idx) => {
+    btn.addEventListener('click', () => {
+      filter = allFilters[parseInt(btn.dataset.idx)];
+      render();
+    });
+  });
 
   let shown = isEvent ? items.filter(i => i.event) : filter === "Tout" ? items : items.filter(i => i.cat === filter);
   const sorted = [...shown].sort((a, b) => {
