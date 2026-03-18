@@ -41,6 +41,8 @@
   .btn-monnaie:hover { border-color:var(--gold-border); color:var(--gold); }
   .btn-vente { background:rgba(74,222,128,0.12); color:var(--green); border:1px solid rgba(74,222,128,0.35); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; }
   .btn-vente:hover { background:rgba(74,222,128,0.22); }
+  .btn-padel { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+  .btn-padel:hover { border-color:rgba(59,130,246,0.5); color:var(--blue); }
 
   /* MODE VENTE */
   .vente-overlay { display:none; position:fixed; inset:0; background:var(--bg); z-index:50; flex-direction:column; overflow:hidden; }
@@ -260,7 +262,27 @@
   .btn-delete { width:100%; margin-top:10px; padding:9px; border-radius:var(--radius-sm); border:1px solid rgba(248,113,113,0.2); background:transparent; color:var(--red); font-size:13px; cursor:pointer; transition:background 0.15s; }
   .btn-delete:hover { background:var(--red-bg); }
 
-  /* MODAL LISTE DE COURSES */
+  /* PADEL */
+  .padel-modal { max-width:500px; }
+  .padel-heure { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
+  .padel-heure-btn { padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border2); background:transparent; color:var(--text2); font-size:14px; font-weight:500; cursor:pointer; transition:all 0.15s; text-align:center; }
+  .padel-heure-btn:hover { border-color:var(--blue); color:var(--blue); }
+  .padel-heure-btn.active { background:var(--blue-dim); border-color:var(--blue); color:var(--blue); font-weight:700; }
+  .padel-joueurs { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+  .padel-joueur { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .padel-joueur-num { font-size:13px; font-weight:700; color:var(--text3); min-width:60px; }
+  .padel-toggle { display:flex; gap:6px; flex-wrap:wrap; }
+  .padel-tag { font-size:12px; padding:5px 10px; border-radius:99px; border:1px solid var(--border2); background:transparent; color:var(--text2); cursor:pointer; transition:all 0.12s; user-select:none; white-space:nowrap; }
+  .padel-tag:hover { border-color:var(--border2); color:var(--text); }
+  .padel-tag.active-adh  { background:var(--blue-dim); border-color:var(--blue); color:var(--blue); font-weight:600; }
+  .padel-tag.active-raq  { background:var(--gold-bg); border-color:var(--gold-border); color:var(--gold); font-weight:600; }
+  .padel-tag.active-bal  { background:var(--green-bg); border-color:rgba(74,222,128,0.4); color:var(--green); font-weight:600; }
+  .padel-joueur-prix { margin-left:auto; font-size:18px; font-weight:700; color:var(--text); white-space:nowrap; }
+  .padel-total-zone { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:16px; }
+  .padel-total-label { font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .padel-total-value { font-size:32px; font-weight:700; color:var(--blue); }
+  .padel-instructions { font-size:12px; color:var(--text3); line-height:1.6; padding:10px 12px; background:var(--surface3); border-radius:var(--radius-sm); margin-bottom:16px; }
+  .padel-instructions strong { color:var(--text2); }
   .courses-modal { max-width:440px; }
   .courses-section { margin-bottom:20px; }
   .courses-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
@@ -307,6 +329,7 @@
   </div>
   <div class="header-right">
     <div class="sync-dot loading" id="sync-dot"></div>
+    <button class="btn-padel" onclick="openPadel()">🎾 Padel</button>
     <button class="btn-vente" onclick="openVente()">🛍️ Vente</button>
     <button class="btn-monnaie" onclick="openMonnaie()">💶 Caisse</button>
     <button class="btn-comptage" onclick="openComptage()">🔢 Comptage</button>
@@ -357,6 +380,34 @@
   </div>
 </div>
 
+<!-- Modal padel -->
+<div class="overlay" id="overlay-padel">
+  <div class="modal padel-modal">
+    <h2>🎾 Calcul session Padel</h2>
+
+    <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Tarif</div>
+    <div class="padel-heure">
+      <button class="padel-heure-btn active" id="btn-pleine" onclick="setHeure('pleine')">☀️ Heure pleine<br><span style="font-size:11px;font-weight:400">Adhérent 9€ · Non-adh 12€</span></button>
+      <button class="padel-heure-btn" id="btn-creuse" onclick="setHeure('creuse')">🌙 Heure creuse<br><span style="font-size:11px;font-weight:400">Adhérent 7€ · Non-adh 10€</span></button>
+    </div>
+
+    <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Joueurs</div>
+    <div class="padel-joueurs" id="padel-joueurs"></div>
+
+    <div class="padel-total-zone">
+      <div class="padel-total-label">Total à saisir dans Summup</div>
+      <div class="padel-total-value" id="padel-total">0,00 €</div>
+    </div>
+
+    <div class="padel-instructions" id="padel-instructions"></div>
+
+    <div class="modal-actions">
+      <button onclick="closePadel()">Fermer</button>
+      <button class="btn-save" onclick="resetPadel()">↺ Réinitialiser</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal comptage monnaie -->
 <div class="overlay" id="overlay-monnaie">
   <div class="modal monnaie-modal">
@@ -394,6 +445,34 @@
 
     <div class="monnaie-actions">
       <button onclick="closeMonnaie()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal padel -->
+<div class="overlay" id="overlay-padel">
+  <div class="modal padel-modal">
+    <h2>🎾 Calcul session padel</h2>
+
+    <div class="padel-heure">
+      <button class="padel-heure-btn active" id="btn-pleine" onclick="setHeure('pleine')">⚡ Heure pleine</button>
+      <button class="padel-heure-btn" id="btn-creuse" onclick="setHeure('creuse')">🌙 Heure creuse</button>
+    </div>
+
+    <div class="padel-joueurs" id="padel-joueurs"></div>
+
+    <div class="padel-total-zone">
+      <div class="padel-total-label">Total à saisir dans Summup</div>
+      <div class="padel-total-value" id="padel-total">0,00 €</div>
+    </div>
+
+    <div class="padel-instructions">
+      Dans Summup → <strong>Diviser → Montant</strong> → saisis le montant de chaque joueur ci-dessus un par un.
+    </div>
+
+    <div class="modal-actions">
+      <button onclick="closePadel()">Fermer</button>
+      <button class="btn-save" onclick="resetPadel()">↺ Réinitialiser</button>
     </div>
   </div>
 </div>
@@ -477,12 +556,25 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, remove, goOnline, goOffline } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = { databaseURL: "https://bar-tennis-stock-default-rtdb.europe-west1.firebasedatabase.app" };
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 const dbRef = ref(db, 'stock');
+
+// Reconnexion automatique quand la page redevient visible (Safari iPhone coupe la connexion en arrière-plan)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    goOffline(db);
+    setTimeout(() => goOnline(db), 300);
+  }
+});
+// Reconnexion aussi au retour de connexion réseau
+window.addEventListener('online', () => {
+  goOffline(db);
+  setTimeout(() => goOnline(db), 300);
+});
 
 const EMOJIS    = {"🥤 Soft":"🥤","🍺 Bière":"🍺","🍷 Vin":"🍷","🍫 Snack sucré":"🍫","🥨 Snack salé":"🥨","🍽️ Food":"🍽️"};
 const CAT_ORDER = ["🥤 Soft","🍺 Bière","🍷 Vin","🍫 Snack sucré","🥨 Snack salé","🍽️ Food"];
@@ -1087,6 +1179,96 @@ function renderVente() {
     </div>`;
   }).join('');
 }
+
+// ── PADEL ─────────────────────────────────────────────────────────
+const TARIFS = {
+  pleine: { adh: 9, nonadh: 12 },
+  creuse: { adh: 7, nonadh: 10 }
+};
+const LOC_RAQUETTE = 3;
+const LOC_BALLES   = 2;
+
+let padelHeure = 'pleine';
+let padelJoueurs = [
+  { adh: false, raquette: false, balles: false },
+  { adh: false, raquette: false, balles: false },
+  { adh: false, raquette: false, balles: false },
+  { adh: false, raquette: false, balles: false },
+];
+
+function prixJoueur(j) {
+  const terrain = TARIFS[padelHeure][j.adh ? 'adh' : 'nonadh'];
+  return terrain + (j.raquette ? LOC_RAQUETTE : 0) + (j.balles ? LOC_BALLES : 0);
+}
+
+function renderPadel() {
+  // Joueurs
+  document.getElementById('padel-joueurs').innerHTML = padelJoueurs.map((j, i) => {
+    const prix = prixJoueur(j);
+    return `<div class="padel-joueur">
+      <div class="padel-joueur-num">Joueur ${i+1}</div>
+      <div class="padel-toggle">
+        <span class="padel-tag ${j.adh ? 'active-adh' : ''}" onclick="togglePadel(${i},'adh')">
+          ${j.adh ? '✓ Adhérent' : 'Adhérent'}
+        </span>
+        <span class="padel-tag ${j.raquette ? 'active-raq' : ''}" onclick="togglePadel(${i},'raquette')">
+          🎾 Raquette +${LOC_RAQUETTE}€
+        </span>
+        <span class="padel-tag ${j.balles ? 'active-bal' : ''}" onclick="togglePadel(${i},'balles')">
+          🟡 Balles +${LOC_BALLES}€
+        </span>
+      </div>
+      <div class="padel-joueur-prix">${prix},00 €</div>
+    </div>`;
+  }).join('');
+
+  // Total
+  const total = padelJoueurs.reduce((s, j) => s + prixJoueur(j), 0);
+  document.getElementById('padel-total').textContent = total + ',00 €';
+
+  // Instructions Summup
+  const parts = padelJoueurs.map((j, i) => {
+    const prix = prixJoueur(j);
+    const pct  = Math.round((1 - prix / total) * 100);
+    return `<strong>Joueur ${i+1}</strong> : ${prix}€ → réduction <strong>${pct}%</strong> dans Summup`;
+  });
+  document.getElementById('padel-instructions').innerHTML =
+    `<strong>Dans Summup → Diviser → Montant :</strong><br>` +
+    padelJoueurs.map((j, i) => {
+      const prix = prixJoueur(j);
+      return `• Joueur ${i+1} : <strong>${prix},00 €</strong>`;
+    }).join('<br>') +
+    `<br><br>Total note : <strong>${total},00 €</strong>`;
+}
+
+window.setHeure = (h) => {
+  padelHeure = h;
+  document.getElementById('btn-pleine').classList.toggle('active', h === 'pleine');
+  document.getElementById('btn-creuse').classList.toggle('active', h === 'creuse');
+  renderPadel();
+};
+
+window.togglePadel = (i, key) => {
+  padelJoueurs[i][key] = !padelJoueurs[i][key];
+  renderPadel();
+};
+
+window.openPadel = () => {
+  padelHeure = 'pleine';
+  padelJoueurs = [
+    { adh: false, raquette: false, balles: false },
+    { adh: false, raquette: false, balles: false },
+    { adh: false, raquette: false, balles: false },
+    { adh: false, raquette: false, balles: false },
+  ];
+  document.getElementById('btn-pleine').classList.add('active');
+  document.getElementById('btn-creuse').classList.remove('active');
+  renderPadel();
+  document.getElementById('overlay-padel').classList.add('open');
+};
+window.closePadel  = () => { document.getElementById('overlay-padel').classList.remove('open'); };
+window.resetPadel  = () => { window.openPadel(); };
+document.getElementById('overlay-padel').addEventListener('click', e => { if (e.target === document.getElementById('overlay-padel')) closePadel(); });
 </script>
 </body>
 </html>
