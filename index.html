@@ -477,25 +477,6 @@
   </div>
 </div>
 
-<!-- Modal vente -->
-<div class="overlay" id="overlay-vente">
-  <div class="modal vente-modal">
-    <h2>🛍️ Mode vente</h2>
-    <div class="vente-banner">
-      <div>
-        <div class="vente-banner-left">Appuie sur chaque produit vendu</div>
-        <div class="vente-banner-sub">Le stock se met à jour à la validation</div>
-      </div>
-      <div class="vente-vendus" id="vente-vendus-count">0</div>
-    </div>
-    <div class="vente-grid" id="vente-grid"></div>
-    <div class="vente-actions">
-      <button onclick="closeVente()">Annuler</button>
-      <button class="btn-valider-vente" onclick="validerVente()">✓ Valider les ventes</button>
-    </div>
-  </div>
-</div>
-
 <!-- Modal comptage -->
 <div class="overlay" id="overlay-comptage">
   <div class="modal comptage-modal">
@@ -810,9 +791,9 @@ function render() {
     const em = EMOJIS[item.cat] || '📦', u = item.unit || '';
     const pl = item.qty > 1 && u !== 'fût' ? 's' : '';
     const bl = s === 'low' ? 'Rupture' : s === 'warn' ? 'Alerte' : 'OK';
-    return `<div class="card status-${s}${item.event ? ' event-flag' : ''}" onclick="openEdit(${item.id})">
-      <button class="trophy-btn ${item.event ? 'active' : ''}" onclick="toggleEvent(${item.id},event)" title="Marquer pour événement">🏆</button>
-      <button class="note-btn ${item.note ? 'has-note' : ''}" onclick="openNote(${item.id},event)" title="${item.note ? 'Voir/modifier la note' : 'Ajouter une note'}">📝</button>
+    return `<div class="card status-${s}${item.event ? ' event-flag' : ''}" data-id="${item.id}">
+      <button class="trophy-btn ${item.event ? 'active' : ''}" data-trophy="${item.id}" title="Marquer pour événement">🏆</button>
+      <button class="note-btn ${item.note ? 'has-note' : ''}" data-note="${item.id}" title="${item.note ? 'Voir/modifier la note' : 'Ajouter une note'}">📝</button>
       <span class="card-emoji">${em}</span>
       <div class="badge ${s}">${bl}</div>${item.event ? '<span class="badge event">Évén.</span>' : ''}
       <div class="card-name" title="${item.name}">${item.name}</div>
@@ -820,14 +801,37 @@ function render() {
       <div class="bar-track"><div class="bar-fill ${s}" style="width:${pct}%"></div></div>
       <div class="qty-row">
         <div class="qty-info"><strong>${item.qty}</strong> ${u}${pl}<br><span>seuil : ${item.min}</span></div>
-        <div class="qty-btns" onclick="event.stopPropagation()">
-          <button class="qty-btn" onclick="change(${item.id},-1)">−</button>
-          <button class="qty-btn" onclick="change(${item.id},+1)">+</button>
+        <div class="qty-btns">
+          <button class="qty-btn" data-minus="${item.id}">−</button>
+          <button class="qty-btn" data-plus="${item.id}">+</button>
         </div>
       </div>
       ${item.note ? `<div class="card-note">${item.note}</div>` : ''}
     </div>`;
-  }).join('') + `<div class="card-add" onclick="openAdd()">＋ Nouveau produit</div>`;
+  }).join('') + `<div class="card-add" id="card-add-btn">＋ Nouveau produit</div>`;
+
+  // Event listeners sur les cartes
+  document.querySelectorAll('.card[data-id]').forEach(card => {
+    const id = parseInt(card.dataset.id);
+    card.addEventListener('click', e => {
+      if (e.target.closest('[data-trophy]') || e.target.closest('[data-note]') || e.target.closest('.qty-btns')) return;
+      window.openEdit(id);
+    });
+  });
+  document.querySelectorAll('[data-trophy]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); window.toggleEvent(parseInt(btn.dataset.trophy), e); });
+  });
+  document.querySelectorAll('[data-note]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); window.openNote(parseInt(btn.dataset.note), e); });
+  });
+  document.querySelectorAll('[data-minus]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); window.change(parseInt(btn.dataset.minus), -1); });
+  });
+  document.querySelectorAll('[data-plus]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); window.change(parseInt(btn.dataset.plus), +1); });
+  });
+  const addBtn = document.getElementById('card-add-btn');
+  if (addBtn) addBtn.addEventListener('click', () => window.openAdd());
 }
 
 window.setFilter = c => { filter = c; render(); };
@@ -996,14 +1000,23 @@ function renderMonnaie() {
       const count = monnaieCounts[val] || 0;
       const sous  = count > 0 ? formatEuro(val * count) : '';
       const em    = emojis[val] || '💰';
-      return `<div class="monnaie-piece" onclick="tapMonnaie(${val})">
+      return `<div class="monnaie-piece" data-mval="${val}">
         <div class="monnaie-piece-icon">${em}</div>
         <div class="monnaie-piece-val">${labelPiece(val)}</div>
         <div class="monnaie-piece-count">${count > 0 ? count : ''}</div>
         <div class="monnaie-piece-sous">${sous || '—'}</div>
-        ${count > 0 ? `<div class="monnaie-piece-reset" onclick="resetPiece(${val},event)">✕</div>` : ''}
+        ${count > 0 ? `<div class="monnaie-piece-reset" data-mreset="${val}">✕</div>` : ''}
       </div>`;
     }).join('');
+    document.querySelectorAll(`#${containerId} .monnaie-piece`).forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target.closest('[data-mreset]')) return;
+        window.tapMonnaie(parseInt(el.dataset.mval));
+      });
+    });
+    document.querySelectorAll(`#${containerId} [data-mreset]`).forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); window.resetPiece(parseInt(btn.dataset.mreset), e); });
+    });
   }
   makeGrid(BILLETS, BILLETS_EMOJI, 'monnaie-billets');
   makeGrid(PIECES,  PIECES_EMOJI,  'monnaie-pieces');
@@ -1051,14 +1064,23 @@ function renderComptageGrid() {
   document.getElementById('comptage-grid').innerHTML = sorted.map(item => {
     const count = comptageMap[item.id] || 0;
     const em = EMOJIS[item.cat] || '📦';
-    return `<div class="comptage-card" onclick="tapComptage(${item.id})">
-      <button class="comptage-reset" onclick="resetComptage(${item.id},event)" title="Remettre à 0">✕</button>
+    return `<div class="comptage-card" data-cid="${item.id}">
+      <button class="comptage-reset" data-creset="${item.id}" title="Remettre à 0">✕</button>
       <span class="comptage-emoji">${em}</span>
       <div class="comptage-name">${item.name}</div>
       <div class="comptage-count">${count}</div>
       <div class="comptage-unit">${item.unit || ''}${count > 1 && item.unit !== 'fût' ? 's' : ''}</div>
     </div>`;
   }).join('');
+  document.querySelectorAll('.comptage-card[data-cid]').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('[data-creset]')) return;
+      window.tapComptage(parseInt(card.dataset.cid));
+    });
+  });
+  document.querySelectorAll('[data-creset]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); window.resetComptage(parseInt(btn.dataset.creset), e); });
+  });
 }
 
 window.tapComptage = (id) => {
@@ -1162,9 +1184,15 @@ window.vendreProduit = (id) => {
 
 function renderVente() {
   const usedCats = ['Tout', ...CAT_ORDER.filter(c => items.some(i => i.cat === c))];
-  document.getElementById('vente-filters').innerHTML = usedCats.map(c =>
-    `<button class="filter-btn ${venteFilter === c ? 'active' : ''}" onclick="setVenteFilter(${JSON.stringify(c)})">${c}</button>`
+  document.getElementById('vente-filters').innerHTML = usedCats.map((c, idx) =>
+    `<button class="filter-btn ${venteFilter === c ? 'active' : ''}" data-vidx="${idx}">${c}</button>`
   ).join('');
+  document.querySelectorAll('#vente-filters .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      venteFilter = usedCats[parseInt(btn.dataset.vidx)];
+      renderVente();
+    });
+  });
 
   const shown  = venteFilter === 'Tout' ? items : items.filter(i => i.cat === venteFilter);
   const sorted = [...shown].sort((a, b) => {
@@ -1178,7 +1206,7 @@ function renderVente() {
     const u   = item.unit || '';
     const low = item.qty === 0;
     const warn = item.qty > 0 && item.qty <= item.min;
-    return `<div class="vente-card ${low ? 'rupture' : ''}" id="vente-card-${item.id}" onclick="vendreProduit(${item.id})">
+    return `<div class="vente-card ${low ? 'rupture' : ''}" id="vente-card-${item.id}" data-vid="${item.id}">
       <div class="vente-flash"></div>
       ${warn ? `<div class="vente-card-badge warn">Faible</div>` : ''}
       ${low  ? `<div class="vente-card-badge low">Rupture</div>` : ''}
@@ -1188,6 +1216,10 @@ function renderVente() {
       <div class="vente-card-unit">${u}</div>
     </div>`;
   }).join('');
+
+  document.querySelectorAll('#vente-grid .vente-card').forEach(card => {
+    card.addEventListener('click', () => window.vendreProduit(parseInt(card.dataset.vid)));
+  });
 }
 
 // ── PADEL ─────────────────────────────────────────────────────────
@@ -1212,19 +1244,18 @@ function prixJoueur(j) {
 }
 
 function renderPadel() {
-  // Joueurs
   document.getElementById('padel-joueurs').innerHTML = padelJoueurs.map((j, i) => {
     const prix = prixJoueur(j);
     return `<div class="padel-joueur">
       <div class="padel-joueur-num">Joueur ${i+1}</div>
       <div class="padel-toggle">
-        <span class="padel-tag ${j.adh ? 'active-adh' : ''}" onclick="togglePadel(${i},'adh')">
+        <span class="padel-tag ${j.adh ? 'active-adh' : ''}" data-pidx="${i}" data-pkey="adh">
           ${j.adh ? '✓ Adhérent' : 'Adhérent'}
         </span>
-        <span class="padel-tag ${j.raquette ? 'active-raq' : ''}" onclick="togglePadel(${i},'raquette')">
+        <span class="padel-tag ${j.raquette ? 'active-raq' : ''}" data-pidx="${i}" data-pkey="raquette">
           🎾 Raquette +${LOC_RAQUETTE}€
         </span>
-        <span class="padel-tag ${j.balles ? 'active-bal' : ''}" onclick="togglePadel(${i},'balles')">
+        <span class="padel-tag ${j.balles ? 'active-bal' : ''}" data-pidx="${i}" data-pkey="balles">
           🟡 Balles +${LOC_BALLES}€
         </span>
       </div>
@@ -1232,16 +1263,12 @@ function renderPadel() {
     </div>`;
   }).join('');
 
-  // Total
+  document.querySelectorAll('.padel-tag[data-pidx]').forEach(tag => {
+    tag.addEventListener('click', () => window.togglePadel(parseInt(tag.dataset.pidx), tag.dataset.pkey));
+  });
+
   const total = padelJoueurs.reduce((s, j) => s + prixJoueur(j), 0);
   document.getElementById('padel-total').textContent = total + ',00 €';
-
-  // Instructions Summup
-  const parts = padelJoueurs.map((j, i) => {
-    const prix = prixJoueur(j);
-    const pct  = Math.round((1 - prix / total) * 100);
-    return `<strong>Joueur ${i+1}</strong> : ${prix}€ → réduction <strong>${pct}%</strong> dans Summup`;
-  });
   document.getElementById('padel-instructions').innerHTML =
     `<strong>Dans Summup → Diviser → Montant :</strong><br>` +
     padelJoueurs.map((j, i) => {
